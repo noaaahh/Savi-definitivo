@@ -24,6 +24,38 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/contact', contactRoutes);
 
+// Ruta temporal para empresas
+app.get('/api/empresas', (req, res) => {
+  res.json({
+    success: true,
+    empresas: [
+      {
+        id: 1,
+        nombre: "Empresa Demo",
+        descripcion: "Descripción de prueba",
+        direccion: "Calle Falsa 123",
+        imagen: "",
+        accesibilidad: {
+          ramp: true,
+          banoAdaptado: false,
+          braille: false,
+          interprete: false,
+          pisosAntideslizantes: false,
+          mesasSillasAdaptadas: false,
+          elevator: false,
+          pasillos: false,
+          puertaAncha: false,
+          contrasteColores: false,
+          guiasPodotactiles: false,
+          alarmasEmergencia: false,
+          sistemaAudifonos: false
+        }
+      }
+    ]
+  });
+});
+
+
 // Conexión a la base de datos
 connectDB();
 

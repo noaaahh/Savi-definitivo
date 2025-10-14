@@ -1,17 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./InicioUsuario.css";
 import { FaInstagram, FaLinkedin, FaWhatsapp, FaSearch } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
 import { BsFilterLeft } from "react-icons/bs";
 import LocalAmpliado from "./LocalAmpliado";
-
+import TopActionHeader from './layout/TopActionHeader';
 
 const InicioUsuario = ({ onBack, onGoInicio }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({ rampa: false, bano: false, braille: false, interprete: false });
+  const [filters, setFilters] = useState({
+    rampa: false,
+    banoAccesible: false,
+    braille: false,
+    interprete: false,
+    pisosAntideslizantes: false,
+    mesasSillasAdaptadas: false,
+    ascensor: false,
+    pasillosMin90cm: false,
+    puerta80cm: false,
+    contrasteColores: false,
+    guiasPodotactiles: false,
+    alarmasEmergencia: false,
+    sistemaAudifonos: false
+  });
   const [query, setQuery] = useState("");
   const [selectedLocal, setSelectedLocal] = useState(null);
-
+  const [filteredLocales, setFilteredLocales] = useState([]);
+  const [empresasData, setEmpresasData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const toggleFilter = () => setIsFilterOpen((v) => !v);
   const handleFilterChange = (e) => {
@@ -19,133 +36,103 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
     setFilters((prev) => ({ ...prev, [name]: checked }));
   };
 
+  const handleCardClick = (local) => setSelectedLocal(local);
+  const handleGoBack = () => setSelectedLocal(null);
 
-  const handleCardClick = (local) => {
-    setSelectedLocal(local);
+  const handleSearchSubmit = () => {
+    // Puedes agregar lógica adicional aquí si lo necesitas
   };
 
-
-  const handleGoBack = () => {
-    setSelectedLocal(null);
-  };
-
-
-
-
-  const localesData = [
-    {
-      id: 1,
-      nombre: "Estrella Fresca",
-      descripcion: "Supermercado uruguayo con más de 20 años en el rubro y 60 locales en todo el país. Se enfoca en la inclusión y la proximidad con el cliente, ofreciendo productos de calidad y locales accesibles para todos.",
-      direccion: "Carlos Quijano 1067, apto 9",
-      telefono: "099 999 999",
-      email: "contacto@estrellafresca.com.uy",
-      calificacion: 4.5,
-      accesibilidades: ["Rampa", "Atención prioritaria", "Baño adaptado", "Caja accesible", "Ascensor"],
-      imagenes: [
-        "https://i.imgur.com/BBojpYB.png",
-        "https://i.imgur.com/6LvOxdx.png",
-        "https://i.imgur.com/jo6rH6V.png"
-      ],
-  image: "https://i.imgur.com/iJ3oRBJ.png",
-  subtitle: "Rampa",
-  horario: "Lun a Vie 8:00 - 21:00"
-    },
-    {
-      id: 2,
-      nombre: "Domino's Pizza",
-      descripcion: "Cadena internacional de pizzerías con más de 15 años en Uruguay. Ofrece delivery y take away con opciones accesibles para todos los clientes.",
-      direccion: "Av. 18 de Julio 1234",
-      telefono: "099 888 777",
-      email: "contacto@dominos.com.uy",
-      calificacion: 4.2,
-      accesibilidades: ["Carteleras Braille", "Atención prioritaria", "Baño adaptado"],
-      imagenes: [
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop"
-      ],
-  image: "https://i.imgur.com/zGkH5ct.png",
-  subtitle: "Carteleras Braille",
-  horario: "Lun a Dom 11:00 - 23:00"
-    },
-    {
-      id: 3,
-      nombre: "McDonald's",
-      descripcion: "Restaurante de comida rápida con múltiples ubicaciones en Montevideo. Comprometido con la accesibilidad y la inclusión de todos los clientes.",
-      direccion: "Av. Italia 3456",
-      telefono: "099 777 666",
-      email: "contacto@mcdonalds.com.uy",
-      calificacion: 4.0,
-      accesibilidades: ["Baño adaptado", "Rampa", "Atención prioritaria", "Caja accesible"],
-      imagenes: [
-        "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=400&fit=crop"
-      ],
-  image: "https://i.imgur.com/bwoRoNn.png",
-  subtitle: "Baño adaptado",
-  horario: "Lun a Vie 7:00 - 22:00"
-    },
-    {
-      id: 4,
-      nombre: "Starbucks",
-      descripcion: "Cafetería internacional con ambiente acogedor y opciones accesibles. Perfecto para trabajar, estudiar o disfrutar de un buen café.",
-      direccion: "Pocitos 789",
-      telefono: "099 666 555",
-      email: "contacto@starbucks.com.uy",
-      calificacion: 4.3,
-      accesibilidades: ["Rampas", "Baño adaptado", "Atención prioritaria"],
-      imagenes: [
-        "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&h=400&fit=crop"
-      ],
-  image: "https://i.imgur.com/npXxBer.png",
-  subtitle: "Rampas",
-  horario: "Lun a Sab 8:00 - 20:00"
-    },
-    {
-      id: 5,
-      nombre: "Burger King",
-      descripcion: "Restaurante de hamburguesas con amplio menú y opciones accesibles. Ubicado en zona céntrica con fácil acceso.",
-      direccion: "Centro 1011",
-      telefono: "099 555 444",
-      email: "contacto@burgerking.com.uy",
-      calificacion: 3.8,
-      accesibilidades: ["Accesibilidad", "Baño adaptado", "Rampa"],
-      imagenes: [
-        "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=400&fit=crop"
-      ],
-  image: "https://i.imgur.com/7gILHEu.png",
-  subtitle: "Accesibilidad",
-  horario: "Lun a Dom 10:00 - 23:00"
-    },
-    {
-      id: 6,
-      nombre: "Subway",
-      descripcion: "Restaurante de sándwiches frescos con opciones saludables y accesibles. Perfecto para una comida rápida y nutritiva.",
-      direccion: "Cordón 1213",
-      telefono: "099 444 333",
-      email: "contacto@subway.com.uy",
-      calificacion: 4.1,
-      accesibilidades: ["Adaptado", "Baño adaptado", "Atención prioritaria"],
-      imagenes: [
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop"
-      ],
-  image: "https://i.imgur.com/xrv7qTZ.png",
-  subtitle: "Adaptado",
-  horario: "Lun a Vie 9:00 - 21:00"
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
     }
-  ];
+  };
 
+  const handleClearFilters = () => {
+    setFilters({
+      rampa: false,
+      banoAccesible: false,
+      braille: false,
+      interprete: false,
+      pisosAntideslizantes: false,
+      mesasSillasAdaptadas: false,
+      ascensor: false,
+      pasillosMin90cm: false,
+      puerta80cm: false,
+      contrasteColores: false,
+      guiasPodotactiles: false,
+      alarmasEmergencia: false,
+      sistemaAudifonos: false
+    });
+    setQuery("");
+  };
 
-  const cards = localesData;
+  // Cargar empresas desde la base de datos
+  const cargarEmpresas = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch('http://localhost:3000/api/empresas');
+      const data = await response.json();
+      console.log("Respuesta de la API:", data); // <-- Agregado para depuración
+      if (data.success) {
+        setEmpresasData(data.empresas || []);
+      } else {
+        setError('Error al cargar las empresas');
+      }
+    } catch (error) {
+      setError('Error de conexión al cargar empresas');
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    cargarEmpresas();
+  }, []);
 
+  useEffect(() => {
+    let filtered = empresasData;
+
+    // Filtrar por término de búsqueda
+    if (query.trim() !== "") {
+      filtered = filtered.filter(empresa =>
+        empresa.nombre?.toLowerCase().includes(query.toLowerCase()) ||
+        empresa.descripcion?.toLowerCase().includes(query.toLowerCase()) ||
+        empresa.direccion?.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+
+    // Filtrar por checkboxes de accesibilidad
+    const activeFilters = Object.keys(filters).filter(key => filters[key]);
+    if (activeFilters.length > 0) {
+      filtered = filtered.filter(empresa => {
+        return activeFilters.some(filter => {
+          const accesibilidad = empresa.accesibilidad || {};
+          const filterMap = {
+            rampa: accesibilidad.ramp,
+            banoAccesible: accesibilidad.banoAdaptado,
+            braille: accesibilidad.braille,
+            interprete: accesibilidad.interprete,
+            pisosAntideslizantes: accesibilidad.pisosAntideslizantes,
+            mesasSillasAdaptadas: accesibilidad.mesasSillasAdaptadas,
+            ascensor: accesibilidad.elevator,
+            pasillosMin90cm: accesibilidad.pasillos,
+            puerta80cm: accesibilidad.puertaAncha,
+            contrasteColores: accesibilidad.contrasteColores,
+            guiasPodotactiles: accesibilidad.guiasPodotactiles,
+            alarmasEmergencia: accesibilidad.alarmasEmergencia,
+            sistemaAudifonos: accesibilidad.sistemaAudifonos
+          };
+          return filterMap[filter] === true;
+        });
+      });
+    }
+
+    setFilteredLocales(filtered);
+  }, [query, filters, empresasData]);
+
+  const cards = filteredLocales;
 
   if (selectedLocal) {
     return (
@@ -156,14 +143,13 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
     );
   }
 
-
   return (
     <div className="inicioUsuario">
+      <TopActionHeader
+        leftButtons={[{ label: 'Inicio', onClick: onGoInicio }]}
+        rightButtons={[{ label: 'Volver atrás', onClick: onBack }]}
+      />
       <section className="inicioUsuario__hero">
-        <nav className="inicioUsuario__nav">
-          <button className="inicioUsuario__btn inicioUsuario__btn--primary" onClick={onGoInicio}>Inicio</button>
-          <button className="inicioUsuario__btn" onClick={onBack}>Volver atrás</button>
-        </nav>
         <img
           className="inicioUsuario__hero-img"
           src="https://i.imgur.com/9bmoDHn.png"
@@ -171,7 +157,6 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
         />
         <h1 className="inicioUsuario__title">¡Te damos la bienvenida!</h1>
       </section>
-
 
       <section className="inicioUsuario__toolbar">
         <div className="inicioUsuario__filter">
@@ -182,9 +167,22 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
           {isFilterOpen && (
             <div className="inicioUsuario__filter-panel">
               <label><input type="checkbox" name="rampa" checked={filters.rampa} onChange={handleFilterChange} /> Rampa</label>
-              <label><input type="checkbox" name="bano" checked={filters.bano} onChange={handleFilterChange} /> Baño adaptado</label>
+              <label><input type="checkbox" name="banoAccesible" checked={filters.banoAccesible} onChange={handleFilterChange} /> Baño adaptado</label>
               <label><input type="checkbox" name="braille" checked={filters.braille} onChange={handleFilterChange} /> Braille</label>
               <label><input type="checkbox" name="interprete" checked={filters.interprete} onChange={handleFilterChange} /> Intérprete</label>
+              <label><input type="checkbox" name="pisosAntideslizantes" checked={filters.pisosAntideslizantes} onChange={handleFilterChange} /> Pisos antideslizantes</label>
+              <label><input type="checkbox" name="mesasSillasAdaptadas" checked={filters.mesasSillasAdaptadas} onChange={handleFilterChange} /> Sillas adaptadas </label>
+              <label><input type="checkbox" name="ascensor" checked={filters.ascensor} onChange={handleFilterChange} /> Ascensor </label>
+              <label><input type="checkbox" name="pasillosMin90cm" checked={filters.pasillosMin90cm} onChange={handleFilterChange} /> Pasillos 90cm</label>
+              <label><input type="checkbox" name="puerta80cm" checked={filters.puerta80cm} onChange={handleFilterChange} /> Puerta ancha</label>
+
+              <br>
+              </br>
+
+              <label><input type="checkbox" name="contrasteColores" checked={filters.contrasteColores} onChange={handleFilterChange} /> Contraste Colores </label>
+              <label><input type="checkbox" name="guiasPodotactiles" checked={filters.guiasPodotactiles} onChange={handleFilterChange} /> Guías podotáctiles </label>
+              <label><input type="checkbox" name="alarmasEmergencia" checked={filters.alarmasEmergencia} onChange={handleFilterChange} /> Alarmas emergencia visuales y sonoras </label>
+              <label><input type="checkbox" name="sistemaAudifonos" checked={filters.sistemaAudifonos} onChange={handleFilterChange} /> Sistema de apoyo para personas con audífonos </label>
             </div>
           )}
         </div>
@@ -195,36 +193,106 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
             placeholder="Buscar aquí"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
-          <div className="inicioUsuario__search-icon">
+          <div className="inicioUsuario__search-icon clickable" onClick={handleSearchSubmit}>
             <FaSearch />
           </div>
         </div>
       </section>
 
-
       <section className="inicioUsuario__grid">
-        {cards.map((c) => (
-          <div
-            key={c.id}
-            className="inicioUsuario__card"
-            style={{ backgroundImage: `url(${c.image})` }}
-          >
-            <div className="inicioUsuario__card-overlay">
-              <div className="inicioUsuario__card-content">
-                <div className="inicioUsuario__card-title">{c.nombre} - {c.subtitle}</div>
-                <button 
-                  className="inicioUsuario__card-button"
-                  onClick={() => handleCardClick(c)}
-                >
-                  Ver →
-                </button>
+        <div style={{ gridColumn: '1 / -1', textAlign: 'center', marginBottom: '20px', color: '#666' }}>
+          <div style={{ marginBottom: '10px' }}>
+            {loading ? (
+              'Cargando empresas...'
+            ) : error ? (
+              `Error: ${error}`
+            ) : query || Object.values(filters).some(f => f) ?
+              `Mostrando ${cards.length} locales de ${empresasData.length}` :
+              `${cards.length} locales disponibles`
+            }
+          </div>
+          {(query || Object.values(filters).some(f => f)) && !loading && (
+            <button
+              onClick={handleClearFilters}
+              style={{
+                background: '#0077b6',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                fontSize: '14px'
+              }}
+            >
+              Limpiar filtros
+            </button>
+          )}
+        </div>
+
+        {loading ? (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px' }}>
+            <p>Cargando empresas desde la base de datos...</p>
+          </div>
+        ) : error ? (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#e74c3c' }}>
+            <p>Error al cargar empresas: {error}</p>
+            <button
+              onClick={cargarEmpresas}
+              style={{
+                background: '#0077b6',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                marginTop: '10px'
+              }}
+            >
+              Reintentar
+            </button>
+          </div>
+        ) : cards.length > 0 ? (
+          cards.map((empresa) => (
+            <div
+              key={empresa.id}
+              className="inicioUsuario__card"
+              style={{
+                backgroundImage: `url(${empresa.imagen || 'https://i.imgur.com/ZifMmLa.jpeg'})`
+              }}
+            >
+              <div className="inicioUsuario__card-overlay">
+                <div className="inicioUsuario__card-content">
+                  <div className="inicioUsuario__card-title">
+                    {empresa.nombre}
+                    {empresa.accesibilidad && (
+                      <div style={{ fontSize: '12px', marginTop: '5px', opacity: 0.9 }}>
+                        {Object.entries(empresa.accesibilidad)
+                          .filter(([key, value]) => value === true)
+                          .slice(0, 2)
+                          .map(([key]) => key.replace(/([A-Z])/g, ' $1').trim())
+                          .join(', ')}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    className="inicioUsuario__card-button"
+                    onClick={() => handleCardClick(empresa)}
+                  >
+                    Ver →
+                  </button>
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div className="no-results">
+            <p>No se encontraron locales que coincidan con tu búsqueda.</p>
+            <p>Intenta con otros términos o filtros.</p>
           </div>
-        ))}
+        )}
       </section>
-
 
       <footer className="inicioUsuario__footer">
         <div className="inicioUsuario__footer-left">
@@ -239,6 +307,4 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
   );
 };
 
-
 export default InicioUsuario;
- 
