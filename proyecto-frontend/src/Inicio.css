@@ -1,0 +1,739 @@
+.faq {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 70%;
+  max-width: 700px;
+}
+.inicio {
+  font-family: Arial, sans-serif;
+  color: #000000;
+  background-color: #fff;
+  min-height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+.inicio .nav-links button {
+  margin-left: 0;
+  padding: 10px 16px;
+  border: none !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 101;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.inicio .nav-links button:hover {
+  background: #f0f0f0 !important;
+  background-color: #f0f0f0 !important;
+  color: #000000 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.inicio .nav-links button.btn-destacado {
+  background: #0077b6 !important;
+  color: #fff !important;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.inicio .nav-links button.btn-destacado:hover {
+  background: #023e8a !important;
+}
+
+.hero {
+  background: url("https://i.imgur.com/woVnDqH.png") center/cover no-repeat;
+  background-attachment: fixed;
+  text-align: center;
+  color: white;
+  padding: 100px 20px;
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.inicio .nav-links {
+  position: fixed;
+  top: 25px;
+  left: 30px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+  background: rgba(173, 216, 230, 0.95) !important;
+  background-color: rgba(173, 216, 230, 0.95) !important;
+  padding: 10px 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 15px;
+  flex-direction: row;
+}
+
+.logo-title__title {
+  font-size: 100px;
+  font-family: 'Plex Sans', sans-serif;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 8px;
+  order: 1;
+  transition: filter 300ms;
+}
+.logo-title__title:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo-title .logo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  order: 2;
+  transition: filter 300ms;
+}
+
+.logo-title .logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.hero p {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 18px;
+  font-weight: bold;
+
+}
+
+.opciones {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 220px;
+  margin-top: 20px;
+}
+
+.opcion-card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+
+.opcion-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.opcion-card-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.425);
+  color: #fff;
+  padding: 15px;
+  text-align: left;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  opacity: 1;
+  visibility: visible;
+  transition: none;
+  z-index: 2;
+}
+
+.opcion-card-overlay p {
+  margin: 4px 0;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.ver-todos-link {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.link-button {
+  background: none !important;
+  border: none !important;
+  color: #0077b6 !important;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 10px 20px;
+  transition: color 0.2s;
+}
+
+.ver-todos-link button:hover {
+  color: #023e8a !important;
+  text-decoration: none;
+  border: none !important;
+}
+
+.link-button:hover {
+  color: #023e8a !important;
+  text-decoration: none;
+}
+
+.quienes-somos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  gap: 40px;
+  background: #E6E6E6;
+}
+
+.texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.quienes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 20px;
+}
+
+.quienes-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  min-height: 140px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.quienes-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.quienes-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.contacto-centrado {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.contacto-btn {
+  background: #ffffff;
+  color: #111111; /* asegurar contraste */
+  border-radius: 8px;
+  padding: 10px 18px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  cursor: pointer;
+  font-weight: 600;
+  min-width: 160px;
+  text-align: center;
+  z-index: 10;
+}
+
+@media (max-width: 1000px) {
+  .quienes-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .quienes-grid { grid-template-columns: 1fr; }
+}
+
+.faq-item {
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 700px;
+  border: 1px solid #ddd;
+  text-align: center;
+  transition: box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.faq-item p {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  margin: 0;
+}
+
+.faq-item:hover p {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 10px;
+}
+
+.faq-item h3 {
+  margin: 0;
+}
+
+.imagen img {
+  max-width: 700px;
+  height: auto;
+  border-radius: 50px;
+  margin-right: 0px;
+}
+
+.footer {
+  background: #ffffff;
+  font-family: "Bali Simbar", sans-serif;
+  color: black;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #e0e0e0;
+}
+
+.footer-text {
+  font-size: 16px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-socials span {
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.footer-socials span:hover {
+  color: #0077b6;
+}
+
+/* Fix for react-icons rendering as letters: target svg inside footer-socials */
+.footer-socials svg,
+.footer-socials a svg,
+.registroPersonal__footer-left svg,
+.inicioUsuario__footer-left svg {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  vertical-align: middle;
+  fill: currentColor;
+}
+
+.faq {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 70%;
+  max-width: 700px;
+}
+.inicio {
+  font-family: Arial, sans-serif;
+  color: #000000;
+  background-color: #fff;
+  min-height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+.inicio .nav-links button {
+  margin-left: 0;
+  padding: 10px 16px;
+  border: none !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 101;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.inicio .nav-links button:hover {
+  background: #f0f0f0 !important;
+  background-color: #f0f0f0 !important;
+  color: #000000 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.inicio .nav-links button.btn-destacado {
+  background: #0077b6 !important;
+  color: #fff !important;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.inicio .nav-links button.btn-destacado:hover {
+  background: #023e8a !important;
+}
+
+.hero {
+  background: url("https://i.imgur.com/woVnDqH.png") center/cover no-repeat;
+  background-attachment: fixed;
+  text-align: center;
+  color: white;
+  padding: 100px 20px;
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.inicio .nav-links {
+  position: fixed;
+  top: 25px;
+  left: 30px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+  background: rgba(173, 216, 230, 0.95) !important;
+  background-color: rgba(173, 216, 230, 0.95) !important;
+  padding: 10px 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 15px;
+  flex-direction: row;
+}
+
+.logo-title__title {
+  font-size: 100px;
+  font-family: 'Plex Sans', sans-serif;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 8px;
+  order: 1;
+  transition: filter 300ms;
+}
+.logo-title__title:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo-title .logo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  order: 2;
+  transition: filter 300ms;
+}
+
+.logo-title .logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.hero p {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 18px;
+  font-weight: bold;
+
+}
+
+.opciones {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 220px;
+  margin-top: 20px;
+}
+
+.opcion-card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+
+.opcion-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.opcion-card-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.425);
+  color: #fff;
+  padding: 15px;
+  text-align: left;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  opacity: 1;
+  visibility: visible;
+  transition: none;
+  z-index: 2;
+}
+
+.opcion-card-overlay p {
+  margin: 4px 0;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.ver-todos-link {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.link-button {
+  background: none !important;
+  border: none !important;
+  color: #0077b6 !important;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 10px 20px;
+  transition: color 0.2s;
+}
+
+.ver-todos-link button:hover {
+  color: #023e8a !important;
+  text-decoration: none;
+  border: none !important;
+}
+
+.link-button:hover {
+  color: #023e8a !important;
+  text-decoration: none;
+}
+
+.quienes-somos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  gap: 40px;
+  background: #E6E6E6;
+}
+
+.texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.quienes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 20px;
+}
+
+.quienes-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  min-height: 140px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.quienes-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.quienes-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.contacto-centrado {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.contacto-btn {
+  background: #ffffff;
+  color: #111111;
+  border-radius: 8px;
+  padding: 10px 18px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  cursor: pointer;
+  font-weight: 600;
+  min-width: 160px;
+  text-align: center;
+  z-index: 10;
+}
+
+@media (max-width: 1000px) {
+  .quienes-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .quienes-grid { grid-template-columns: 1fr; }
+}
+
+.faq-item {
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 700px;
+  border: 1px solid #ddd;
+  text-align: center;
+  transition: box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.faq-item p {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  margin: 0;
+}
+
+.faq-item:hover p {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 10px;
+}
+
+.faq-item h3 {
+  margin: 0;
+}
+
+.imagen img {
+  max-width: 700px;
+  height: auto;
+  border-radius: 50px;
+  margin-right: 0px;
+}
+
+.footer {
+  background: #ffffff;
+  font-family: "Bali Simbar", sans-serif;
+  color: black;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #e0e0e0;
+}
+
+.footer-text {
+  font-size: 16px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-socials span {
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.footer-socials span:hover {
+  color: #0077b6;
+}
