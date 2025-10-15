@@ -108,21 +108,21 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
     if (activeFilters.length > 0) {
       filtered = filtered.filter(empresa => {
         return activeFilters.some(filter => {
-          const accesibilidad = empresa.accesibilidad || {};
+          const accesibilidad = empresa.accesibilidad && empresa.accesibilidad.length > 0 ? empresa.accesibilidad[0] : {};
           const filterMap = {
-            rampa: accesibilidad.ramp,
-            banoAccesible: accesibilidad.banoAdaptado,
-            braille: accesibilidad.braille,
+            rampa: accesibilidad.rampa,
+            banoAccesible: accesibilidad.bano_accesible,
+            braille: accesibilidad.senalizacion_braille,
             interprete: accesibilidad.interprete,
-            pisosAntideslizantes: accesibilidad.pisosAntideslizantes,
-            mesasSillasAdaptadas: accesibilidad.mesasSillasAdaptadas,
-            ascensor: accesibilidad.elevator,
-            pasillosMin90cm: accesibilidad.pasillos,
-            puerta80cm: accesibilidad.puertaAncha,
-            contrasteColores: accesibilidad.contrasteColores,
-            guiasPodotactiles: accesibilidad.guiasPodotactiles,
-            alarmasEmergencia: accesibilidad.alarmasEmergencia,
-            sistemaAudifonos: accesibilidad.sistemaAudifonos
+            pisosAntideslizantes: accesibilidad.pisos_antideslizantes,
+            mesasSillasAdaptadas: accesibilidad.mesas_sillas_adaptadas,
+            ascensor: accesibilidad.ascensor,
+            pasillosMin90cm: accesibilidad.pasillos_min_90cm,
+            puerta80cm: accesibilidad.puerta_80cm,
+            contrasteColores: accesibilidad.contraste_colores,
+            guiasPodotactiles: accesibilidad.guias_podotactiles,
+            alarmasEmergencia: accesibilidad.alarmas_emergencia,
+            sistemaAudifonos: accesibilidad.sistema_audifonos
           };
           return filterMap[filter] === true;
         });
@@ -265,12 +265,28 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
                 <div className="inicioUsuario__card-content">
                   <div className="inicioUsuario__card-title">
                     {empresa.nombre}
-                    {empresa.accesibilidad && (
+                    {empresa.accesibilidad && empresa.accesibilidad.length > 0 && (
                       <div style={{ fontSize: '12px', marginTop: '5px', opacity: 0.9 }}>
-                        {Object.entries(empresa.accesibilidad)
+                        {Object.entries(empresa.accesibilidad[0])
                           .filter(([key, value]) => value === true)
                           .slice(0, 2)
-                          .map(([key]) => key.replace(/([A-Z])/g, ' $1').trim())
+                          .map(([key]) => {
+                            const fieldNames = {
+                              rampa: 'Rampa',
+                              bano_accesible: 'Baño accesible',
+                              senalizacion_braille: 'Braille',
+                              pisos_antideslizantes: 'Pisos antideslizantes',
+                              mesas_sillas_adaptadas: 'Sillas adaptadas',
+                              ascensor: 'Ascensor',
+                              pasillos_min_90cm: 'Pasillos amplios',
+                              puerta_80cm: 'Puerta ancha',
+                              contraste_colores: 'Contraste colores',
+                              guias_podotactiles: 'Guías podotáctiles',
+                              alarmas_emergencia: 'Alarmas emergencia',
+                              sistema_audifonos: 'Sistema audífonos'
+                            };
+                            return fieldNames[key] || key;
+                          })
                           .join(', ')}
                       </div>
                     )}

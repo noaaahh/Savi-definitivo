@@ -1,5 +1,5 @@
 // Central API configuration for the frontend
-const DEFAULT_BASE = 'http://localhost:3001';
+const DEFAULT_BASE = 'http://localhost:3000';
 
 export const API_CONFIG = {
   BASE_URL: (import.meta && import.meta.env && import.meta.env.VITE_API_BASE) || DEFAULT_BASE,

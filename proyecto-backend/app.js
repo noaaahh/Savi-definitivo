@@ -12,7 +12,7 @@ import { connectDB, isDBConnected } from './config/db.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 // Configurar CORS para permitir que el frontend en desarrollo acceda a la API.
 // origin: dirección del frontend (Vite por defecto en 5173).
