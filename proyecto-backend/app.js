@@ -35,7 +35,6 @@ app.get('/health', (req, res) => {
   return res.status(503).json({ status: 'db_unavailable' });
 });
 
-
 // Iniciar la conexión a la base de datos (Prisma)
 // connectDB intentará conectar con la BD y si falla hará process.exit(1)
 connectDB();
