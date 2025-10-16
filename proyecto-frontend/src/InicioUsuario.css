@@ -1,0 +1,240 @@
+.inicioUsuario {
+  background: #e6f3ff;
+  color: #111;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.inicioUsuario__nav {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+  background: rgba(173, 216, 230, 0.95) !important;
+  background-color: rgba(173, 216, 230, 0.95) !important;
+  padding: 10px 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.inicioUsuario__btn {
+  background: #ffffff;
+  color: #000;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.inicioUsuario__btn--primary {
+  background: #0a66ff;
+  color: #fff;
+}
+
+.inicioUsuario__hero {
+  position: relative;
+  height: 320px;
+  overflow: hidden;
+}
+
+.inicioUsuario__hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.inicioUsuario__title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 100px 20px 0;
+  text-align: center;
+  color: #fff;
+  font-size: 48px;
+  font-weight: 800;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, .45);
+}
+
+.inicioUsuario__toolbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding: 14px 20px;
+  background: #ebebeb;
+}
+
+.inicioUsuario__filter {
+  position: relative;
+}
+
+.inicioUsuario__filter-toggle {
+  background: #bbe3fc;
+  color: #000;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.inicioUsuario__filter-panel {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  background: #bbe3fc;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+  padding: 16px 20px;
+  display: grid;
+  gap: 10px;
+  z-index: 3;
+  min-width: 200px;
+}
+
+.inicioUsuario__search-container {
+  position: relative;
+  justify-self: center;
+  max-width: 900px;
+  width: 100%;
+}
+
+.inicioUsuario__search {
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  padding: 0 16px 0 16px;
+  background: #fff;
+  color: #000;
+  width: 100%;
+  font-size: 16px;
+  padding-right: 50px;
+}
+
+.inicioUsuario__search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.inicioUsuario__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 100px;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.inicioUsuario__card {
+  position: relative;
+  aspect-ratio: 1.4;
+  border-radius: 15px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #f0f0f0;
+  min-height: 200px;
+}
+
+.inicioUsuario__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.inicioUsuario__card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 15px;
+}
+
+.inicioUsuario__card-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.inicioUsuario__card-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.3;
+  flex: 1;
+}
+
+.inicioUsuario__card-button {
+  background: #0077b6;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.inicioUsuario__card-button:hover {
+  background: #005a8b;
+}
+
+.inicioUsuario__footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: #fff;
+}
+
+.inicioUsuario__footer-left {
+  display: flex;
+  gap: 12px;
+}
+
+.inicioUsuario__footer-left a {
+  color: inherit;
+  font-size: 22px;
+}
+
+.inicioUsuario__footer-left a:hover {
+  color: #0a66ff;
+}
+
+@media (max-width: 1000px) {
+  .inicioUsuario__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .inicioUsuario__grid {
+    grid-template-columns: 1fr;
+  }
+}
