@@ -95,6 +95,22 @@ export const getAllEmpresas = async () => {
 };
 
 /**
+ * getUltimosLocales
+ * Obtiene los últimos 3 locales registrados con sus datos de accesibilidad.
+ */
+export const getUltimosLocales = async () => {
+  return await prisma.empresa.findMany({
+    include: {
+      detallesAccesibilidad: true
+    },
+    orderBy: {
+      empresa_id: 'desc'
+    },
+    take: 3
+  });
+};
+
+/**
  * getEmpresaById
  * Obtiene una empresa específica por ID con sus datos de accesibilidad.
  */

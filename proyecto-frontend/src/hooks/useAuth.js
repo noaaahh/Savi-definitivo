@@ -15,17 +15,20 @@ export function useAuth() {
         const token = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
         
-        if (token) {
+        console.log('useAuth - Loading user:', { token: !!token, storedUser: !!storedUser });
+        
+        if (token && storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          console.log('useAuth - Parsed user:', parsedUser);
           setIsAuthenticated(true);
-          if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
-          }
+          setUser(parsedUser);
         } else {
+          console.log('useAuth - No auth data found');
           setIsAuthenticated(false);
           setUser(null);
         }
       } catch (e) {
+        console.error('useAuth - Error loading user:', e);
         setIsAuthenticated(false);
         setUser(null);
       }
@@ -35,15 +38,26 @@ export function useAuth() {
     loadUser();
 
     // Escuchar cambios en localStorage
-    const handleStorageChange = () => {
+    const handleStorageChange = (e) => {
+      console.log('useAuth - Storage change detected:', e.key);
+      if (e.key === 'token' || e.key === 'user') {
+        loadUser();
+      }
+    };
+
+    // También escuchar eventos personalizados para cambios en la misma pestaña
+    const handleAuthChange = () => {
+      console.log('useAuth - Auth change event received');
       loadUser();
     };
 
     window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('authChange', handleAuthChange);
     
     // Cleanup
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authChange', handleAuthChange);
     };
   }, []);
 
@@ -96,6 +110,9 @@ export async function login(email, password) {
       // Guardar token y usuario en localStorage
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      
+      // Disparar evento personalizado para notificar cambios de auth
+      window.dispatchEvent(new CustomEvent('authChange'));
       
       return { 
         success: true, 

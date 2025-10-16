@@ -4,6 +4,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-top: 120px; /* Espacio para la barra de navegación fija */
 }
 
 .inicioUsuario__nav {
@@ -42,6 +43,7 @@
   position: relative;
   height: 320px;
   overflow: hidden;
+  margin-top: -120px; /* Compensar el padding-top del contenedor */
 }
 
 .inicioUsuario__hero-img {

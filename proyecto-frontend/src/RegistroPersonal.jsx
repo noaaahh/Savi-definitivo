@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './RegistroPersonal.css';
 import { FaInstagram, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 import { MdMailOutline } from 'react-icons/md';
+import { goBack } from './utils/navigation';
 
 export default function RegistroPersonal({ onBack, onGoInicio, onGoInicioUsuario }) {
   const [form, setForm] = useState({ nombre: '', email: '', password: '', password2: '' });
@@ -74,7 +75,7 @@ export default function RegistroPersonal({ onBack, onGoInicio, onGoInicioUsuario
       <section className="registroPersonal__hero">
         <nav className="registroPersonal__nav">
           <button className="registroPersonal__btn registroPersonal__btn--primary" onClick={onGoInicio}>Inicio</button>
-          <button className="registroPersonal__btn" onClick={onBack}>Volver atrás</button>
+          <button className="registroPersonal__btn" onClick={goBack}>Volver atrás</button>
         </nav>
         <img
           className="registroPersonal__hero-img"

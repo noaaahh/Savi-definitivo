@@ -1,5 +1,4 @@
 import * as EmpresaService from '../services/empresaService.js';
-import * as CalificacionService from '../services/calificacionService.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -143,7 +142,12 @@ export const getAllEmpresas = async (req, res) => {
         empresa_id: empresa.empresa_id,
         nombre: empresa.nombre,
         email: empresa.email,
+        descripcion: empresa.descripcion,
+        direccion: empresa.direccion,
+        contacto: empresa.contacto,
+        horario: empresa.horario,
         publicado: empresa.publicado,
+        imagenes: empresa.imagenes,
         accesibilidad: {
           // Mapear campos de la BD a los nombres que espera el frontend
           ramp: accesibilidad.rampa,
@@ -176,6 +180,58 @@ export const getAllEmpresas = async (req, res) => {
 };
 
 /**
+ * getUltimosLocales
+ * Endpoint para obtener los últimos 3 locales registrados.
+ */
+export const getUltimosLocales = async (req, res) => {
+  try {
+    const empresas = await EmpresaService.getUltimosLocales();
+    
+    // Filtrar información sensible y mapear campos de accesibilidad
+    const empresasResponse = empresas.map(empresa => {
+      const accesibilidad = empresa.detallesAccesibilidad[0] || {};
+      return {
+        empresa_id: empresa.empresa_id,
+        nombre: empresa.nombre,
+        email: empresa.email,
+        descripcion: empresa.descripcion,
+        direccion: empresa.direccion,
+        contacto: empresa.contacto,
+        horario: empresa.horario,
+        publicado: empresa.publicado,
+        imagenes: empresa.imagenes,
+        accesibilidad: {
+          // Mapear campos de la BD a los nombres que espera el frontend
+          ramp: accesibilidad.rampa,
+          banoAdaptado: accesibilidad.bano_accesible,
+          braille: accesibilidad.senalizacion_braille,
+          interprete: false, // No está en el esquema actual
+          pisosAntideslizantes: accesibilidad.pisos_antideslizantes,
+          mesasSillasAdaptadas: accesibilidad.mesas_sillas_adaptadas,
+          elevator: accesibilidad.ascensor,
+          pasillos: accesibilidad.pasillos_min_90cm,
+          puertaAncha: accesibilidad.puerta_80cm,
+          contrasteColores: accesibilidad.contraste_colores,
+          guiasPodotactiles: accesibilidad.guias_podotactiles,
+          alarmasEmergencia: accesibilidad.alarmas_emergencia,
+          sistemaAudifonos: accesibilidad.sistema_audifonos
+        }
+      };
+    });
+
+    res.json({
+      success: true,
+      empresas: empresasResponse,
+      total: empresasResponse.length
+    });
+
+  } catch (error) {
+    console.error('Error obteniendo últimos locales:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+/**
  * getEmpresaById
  * Endpoint para obtener una empresa específica por ID.
  */
@@ -191,9 +247,6 @@ export const getEmpresaById = async (req, res) => {
     // Filtrar información sensible y mapear campos de accesibilidad
     const accesibilidad = empresa.detallesAccesibilidad[0] || {};
     
-    // Obtener el promedio de calificaciones
-    const promedioCalificacion = await CalificacionService.getPromedioCalificacion(parseInt(id));
-    
     const empresaResponse = {
       empresa_id: empresa.empresa_id,
       nombre: empresa.nombre,
@@ -205,8 +258,8 @@ export const getEmpresaById = async (req, res) => {
       publicado: empresa.publicado,
       imagenes: empresa.imagenes,
       calificacion: {
-        promedio: promedioCalificacion.promedio,
-        totalCalificaciones: promedioCalificacion.totalCalificaciones
+        promedio: 0,
+        totalCalificaciones: 0
       },
       accesibilidad: {
         // Mapear campos de la BD a los nombres que espera el frontend

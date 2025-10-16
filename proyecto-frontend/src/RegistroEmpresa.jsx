@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './RegistroEmpresa.css';
 import { FaInstagram, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 import { MdMailOutline } from 'react-icons/md';
+import { goBack } from './utils/navigation';
 
 
 // Este componente es el formulario para registrar empresas. Mantengo la lógica,
@@ -132,7 +133,7 @@ export default function RegistroEmpresa({ onBack }) {
       <header className="pe-hero">
         <div className="nav-links">
           <button onClick={() => (window.location.hash = '#inicio')}>Inicio</button>
-          <button className="btn-secondary" onClick={onBack}>Volver atrás</button>
+          <button className="btn-secondary" onClick={goBack}>Volver atrás</button>
         </div>
         <img
           className="pe-hero-img"

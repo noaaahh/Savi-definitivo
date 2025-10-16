@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ModalLogin from "./ModalLogin";
+import LocalAmpliado from "./LocalAmpliado";
+import { useAuth } from "./hooks/useAuth";
 import "./Inicio.css";
 import "./InicioUsuario.css";
 import { FaInstagram } from "react-icons/fa";
@@ -8,20 +10,85 @@ import { FaWhatsapp } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
 
 const Inicio = ({ onGoRegistro, onGoInicioUsuario }) => {
+  const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
+  const [ultimosLocales, setUltimosLocales] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedLocal, setSelectedLocal] = useState(null);
 
   const toggle = (i) => {
     setOpen(open === i ? null : i);
   };
+
+  // Manejar clic en tarjeta de local
+  const handleCardClick = async (local) => {
+    try {
+      // Cargar datos completos de la empresa desde la API
+      const response = await fetch(`http://localhost:3001/api/empresas/${local.empresa_id}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log('Datos completos cargados para LocalAmpliado:', data.empresa);
+        setSelectedLocal(data.empresa);
+      } else {
+        console.error('Error cargando datos completos:', data.error);
+        // Fallback: usar datos básicos
+        setSelectedLocal(local);
+      }
+    } catch (error) {
+      console.error('Error cargando datos completos:', error);
+      // Fallback: usar datos básicos
+      setSelectedLocal(local);
+    }
+  };
+
+  // Manejar volver atrás desde LocalAmpliado
+  const handleGoBack = () => setSelectedLocal(null);
+
+  // Cargar los últimos locales desde el backend
+  useEffect(() => {
+    const fetchUltimosLocales = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/empresas/ultimos');
+        const data = await response.json();
+        
+        if (data.success) {
+          setUltimosLocales(data.empresas);
+        } else {
+          console.error('Error al cargar locales:', data.error);
+        }
+      } catch (error) {
+        console.error('Error de conexión:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUltimosLocales();
+  }, []);
+
+  // Si hay un local seleccionado, mostrar LocalAmpliado
+  if (selectedLocal) {
+    return (
+      <LocalAmpliado
+        local={selectedLocal}
+        onGoBack={handleGoBack}
+      />
+    );
+  }
 
   return (
     <div className="inicio">
 
       <section className="hero">
         <div className="nav-links">
-          <button onClick={() => setShowLogin(true)}>Iniciar sesión</button>
-          <button onClick={onGoRegistro}>Registrarse</button>
+          {!isAuthenticated && (
+            <button onClick={() => setShowLogin(true)}>Iniciar sesión</button>
+          )}
+          {!isAuthenticated && (
+            <button onClick={onGoRegistro}>Registrarse</button>
+          )}
         </div>
         <div className="logo-title">
           <img src="https://i.imgur.com/5MlZOKV.png" alt="Logo SAVI" className="logo" />
@@ -36,43 +103,65 @@ const Inicio = ({ onGoRegistro, onGoInicioUsuario }) => {
 
       <section className="opciones">
         <h2>Locales destacados:</h2>
-        <section className="inicioUsuario__grid">
-          <div
-            className="inicioUsuario__card"
-            style={{ backgroundImage: `url(https://i.imgur.com/ZifMmLa.jpeg)` }}
-          >
-            <div className="inicioUsuario__card-overlay">
-              <div className="inicioUsuario__card-content">
-                <div className="inicioUsuario__card-title">Kinko - Poctitos</div>
-              </div>
-            </div>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '40px' }}>
+            <p>Cargando locales...</p>
           </div>
+        ) : (
+          <section className="inicioUsuario__grid">
+            {ultimosLocales.length > 0 ? (
+              ultimosLocales.map((local, index) => {
+                // Obtener la primera imagen del local o usar imagen por defecto
+                let imagenUrl = 'https://i.imgur.com/ZifMmLa.jpeg'; // Imagen por defecto
+                
+                if (local.imagenes) {
+                  try {
+                    const imagenes = JSON.parse(local.imagenes);
+                    if (imagenes && imagenes.length > 0) {
+                      imagenUrl = imagenes[0];
+                    }
+                  } catch (e) {
+                    console.error('Error al parsear imágenes:', e);
+                  }
+                }
 
-          <div
-            className="inicioUsuario__card"
-            style={{ backgroundImage: `url(https://i.imgur.com/ZifMmLa.jpeg)` }}
-          >
-            <div className="inicioUsuario__card-overlay">
-              <div className="inicioUsuario__card-content">
-                <div className="inicioUsuario__card-title">EstrellaFresca - Centro</div>
+                return (
+                  <div
+                    key={local.empresa_id}
+                    className="inicioUsuario__card"
+                    style={{ 
+                      backgroundImage: `url(${imagenUrl})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }}
+                    onClick={() => handleCardClick(local)}
+                  >
+                    <div className="inicioUsuario__card-overlay">
+                      <div className="inicioUsuario__card-content">
+                        <div className="inicioUsuario__card-title">
+                          {local.nombre}
+                          {local.direccion && (
+                            <div style={{ fontSize: '12px', marginTop: '5px', opacity: 0.9 }}>
+                              {local.direccion}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div style={{ textAlign: 'center', padding: '40px', gridColumn: '1 / -1' }}>
+                <p>No hay locales registrados aún.</p>
               </div>
-            </div>
-          </div>
-
-          <div
-            className="inicioUsuario__card"
-            style={{ backgroundImage: `url(https://i.imgur.com/ZifMmLa.jpeg)` }}
-          >
-            <div className="inicioUsuario__card-overlay">
-              <div className="inicioUsuario__card-content">
-                <div className="inicioUsuario__card-title">Geant - Carrasco</div>
-              </div>
-            </div>
-          </div>
-        </section>
+            )}
+          </section>
+        )}
         <div className="ver-todos-link">
           <button onClick={onGoInicioUsuario} className="link-button">
-            ver todos los comercios
+            Ver todos los comercios
           </button>
         </div>
       </section>

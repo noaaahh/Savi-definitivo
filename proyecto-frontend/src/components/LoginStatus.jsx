@@ -5,14 +5,17 @@ import './LoginStatus.css';
 const LoginStatus = () => {
   const { user, isAuthenticated } = useAuth();
 
+  console.log('LoginStatus - Render:', { isAuthenticated, user });
+
   if (!isAuthenticated || !user) {
+    console.log('LoginStatus - Not authenticated, returning null');
     return null;
   }
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new CustomEvent('authChange'));
     window.location.hash = '#inicio';
   };
 

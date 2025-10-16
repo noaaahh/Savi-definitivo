@@ -1,5 +1,7 @@
 import React from 'react';
 import './registro.css';
+import { goBack } from './utils/navigation';
+import { FaInstagram, FaLinkedin } from 'react-icons/fa';
 
 // Componente `Registro`
 // - Props:
@@ -12,7 +14,7 @@ export default function Registro({ onBack, onGoRegistroPersonal, onGoRegistroEmp
     <div className="registro">
       <section className="registro__hero">
         <nav className="registro__nav">
-          <button className="registro__btn" onClick={onBack}>Volver</button>
+          <button className="registro__btn" onClick={goBack}>Volver</button>
           <button className="registro__btn registro__btn--primary" onClick={onBack}>Inicio</button>
         </nav>
         <img
@@ -58,8 +60,12 @@ export default function Registro({ onBack, onGoRegistroPersonal, onGoRegistroEmp
 
       <footer className="registro__footer">
         <div className="registro__footer-left">
-          <a href="#">Instagram</a>
-          <a href="#">LinkedIn</a>
+          <a href="#" aria-label="Instagram">
+            <FaInstagram />
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <FaLinkedin />
+          </a>
         </div>
         <div className="registro__footer-right">Contacto: 091 222 333 — savi@gmail.com.uy</div>
       </footer>

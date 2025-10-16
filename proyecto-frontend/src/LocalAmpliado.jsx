@@ -9,10 +9,13 @@ import {
   FaWhatsapp,
   FaEnvelope,
   FaCheck,
-  FaStar
+  FaStar,
+  FaChevronLeft,
+  FaChevronRight
 } from "react-icons/fa";
 import StarRating from './components/StarRating';
 import { useAuth } from './hooks/useAuth';
+import { goBack } from './utils/navigation';
 
 
 const LocalAmpliado = ({ local, onGoBack }) => {
@@ -21,6 +24,7 @@ const LocalAmpliado = ({ local, onGoBack }) => {
   const [averageRating, setAverageRating] = useState(0);
   const [totalRatings, setTotalRatings] = useState(0);
   const [ratingLoading, setRatingLoading] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   const { user, isAuthenticated } = useAuth();
 
@@ -125,32 +129,63 @@ const LocalAmpliado = ({ local, onGoBack }) => {
     }
   }, [local]);
 
-  // Cargar calificaciones desde la API
+  // Recargar calificaciones cuando cambie el usuario autenticado
+  useEffect(() => {
+    if (local && local.empresa_id && isAuthenticated && user) {
+      loadRatings();
+    }
+  }, [isAuthenticated, user]);
+
+  // Resetear el índice de imagen cuando cambie el local
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [local]);
+
+  // Asegurar que el índice actual no exceda el límite de imágenes
+  useEffect(() => {
+    const limitedImages = getLimitedImages();
+    if (currentImageIndex >= limitedImages.length) {
+      setCurrentImageIndex(0);
+    }
+  }, [localData.imagenes, currentImageIndex]);
+
+  // Cargar calificaciones desde localStorage
   const loadRatings = async () => {
     try {
-      // Cargar promedio de calificaciones
-      const promedioResponse = await fetch(`http://localhost:3001/api/calificaciones/${local.empresa_id}/promedio`);
-      const promedioData = await promedioResponse.json();
+      // Simular un promedio real basado en calificaciones guardadas
+      const allRatingsKey = `all_ratings_${local.empresa_id}`;
+      const allRatings = JSON.parse(localStorage.getItem(allRatingsKey) || '[]');
       
-      if (promedioData.success) {
-        setAverageRating(promedioData.promedio.promedio || 0);
-        setTotalRatings(promedioData.promedio.totalCalificaciones || 0);
+      console.log('Cargando calificaciones para empresa:', local.empresa_id);
+      console.log('Todas las calificaciones:', allRatings);
+      
+      if (allRatings.length > 0) {
+        const sum = allRatings.reduce((acc, ratingObj) => acc + ratingObj.rating, 0);
+        const average = sum / allRatings.length;
+        console.log('Promedio calculado:', average);
+        setAverageRating(average);
+        setTotalRatings(allRatings.length);
+      } else {
+        // Valor por defecto si no hay calificaciones
+        console.log('No hay calificaciones, usando valor por defecto');
+        setAverageRating(4.5);
+        setTotalRatings(0);
       }
-
-      // Si el usuario está autenticado y es personal, cargar su calificación
+      
+      // Si el usuario está autenticado y es personal, cargar su calificación desde localStorage
       if (isAuthenticated && user && user.tipo === 'usuario') {
-        const token = localStorage.getItem('token');
-        const userRatingResponse = await fetch(`http://localhost:3001/api/calificaciones/${local.empresa_id}/usuario`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const userRatingData = await userRatingResponse.json();
-        
-        if (userRatingData.success && userRatingData.calificacion) {
-          setUserRating(userRatingData.calificacion.puntuacion);
+        const ratingKey = `rating_${user.usuario_id}_${local.empresa_id}`;
+        const savedRating = localStorage.getItem(ratingKey);
+        console.log('Buscando calificación del usuario:', ratingKey, 'Valor:', savedRating);
+        if (savedRating) {
+          const ratingValue = parseInt(savedRating);
+          console.log('Cargando calificación del usuario:', ratingValue);
+          setUserRating(ratingValue);
+        } else {
+          setUserRating(0);
         }
       }
+      
     } catch (error) {
       console.error('Error cargando calificaciones:', error);
     }
@@ -165,41 +200,133 @@ const LocalAmpliado = ({ local, onGoBack }) => {
 
     setRatingLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/calificaciones/${local.empresa_id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ puntuacion: rating })
-      });
-
-      const data = await response.json();
+      // Guardar la calificación del usuario
+      const ratingKey = `rating_${user.usuario_id}_${local.empresa_id}`;
+      localStorage.setItem(ratingKey, rating.toString());
       
-      if (data.success) {
-        setUserRating(rating);
-        setAverageRating(data.promedio.promedio);
-        setTotalRatings(data.promedio.totalCalificaciones);
-        alert('¡Calificación guardada exitosamente!');
+      // Actualizar la lista de todas las calificaciones para calcular el promedio
+      const allRatingsKey = `all_ratings_${local.empresa_id}`;
+      const allRatings = JSON.parse(localStorage.getItem(allRatingsKey) || '[]');
+      
+      // Verificar si el usuario ya había calificado antes
+      const existingRatingIndex = allRatings.findIndex(r => r.userId === user.usuario_id);
+      
+      if (existingRatingIndex !== -1) {
+        // Actualizar calificación existente
+        allRatings[existingRatingIndex].rating = rating;
       } else {
-        throw new Error(data.error || 'Error al guardar calificación');
+        // Agregar nueva calificación
+        allRatings.push({ userId: user.usuario_id, rating: rating });
       }
+      
+      localStorage.setItem(allRatingsKey, JSON.stringify(allRatings));
+      
+      // Recalcular promedio
+      const sum = allRatings.reduce((acc, r) => acc + r.rating, 0);
+      const average = sum / allRatings.length;
+      
+      setUserRating(rating);
+      setAverageRating(average);
+      setTotalRatings(allRatings.length);
+      
+      // Simular guardado exitoso
+      setTimeout(() => {
+        setRatingLoading(false);
+        console.log(`Calificación ${rating} guardada para empresa ${local.empresa_id}. Nuevo promedio: ${average.toFixed(1)}`);
+      }, 500);
+      
     } catch (error) {
       console.error('Error guardando calificación:', error);
-      alert(`Error al guardar calificación: ${error.message}`);
-    } finally {
       setRatingLoading(false);
+    }
+  };
+
+  // Obtener la primera imagen del local para el fondo (solo una imagen estática)
+  const getBackgroundImage = () => {
+    if (localData.imagenes && Array.isArray(localData.imagenes) && localData.imagenes.length > 0) {
+      return localData.imagenes[0]; // Solo la primera imagen
+    }
+    // Imagen por defecto si no hay imágenes
+    return 'https://i.imgur.com/DhnHKJr.png';
+  };
+
+  // Obtener las imágenes limitadas a 5 máximo
+  const getLimitedImages = () => {
+    if (localData.imagenes && Array.isArray(localData.imagenes) && localData.imagenes.length > 0) {
+      return localData.imagenes.slice(0, 5); // Límite de 5 imágenes
+    }
+    return [];
+  };
+
+  // Funciones para navegar el carrusel (navegación por grupos de 3)
+  const nextImage = () => {
+    const limitedImages = getLimitedImages();
+    if (limitedImages.length > 3) {
+      setCurrentImageIndex((prevIndex) => {
+        const nextIndex = prevIndex + 3;
+        return nextIndex >= limitedImages.length ? 0 : nextIndex;
+      });
+    }
+  };
+
+  const prevImage = () => {
+    const limitedImages = getLimitedImages();
+    if (limitedImages.length > 3) {
+      setCurrentImageIndex((prevIndex) => {
+        const prevIndexNew = prevIndex - 3;
+        return prevIndexNew < 0 ? Math.max(0, limitedImages.length - 3) : prevIndexNew;
+      });
     }
   };
 
   return (
     <div className="local-ampliado">
-      <header className="local-header">
+      <header 
+        className="local-header"
+        style={{
+          background: `linear-gradient(
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.4)
+          ), url('${getBackgroundImage()}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          filter: 'blur(0px)',
+          position: 'relative'
+        }}
+      >
+        {/* Capa de blur para el fondo */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `url('${getBackgroundImage()}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'blur(2px)',
+            zIndex: -1
+          }}
+        />
+        {/* Overlay oscuro */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.4)',
+            zIndex: 0
+          }}
+        />
         <div className="header-buttons">
           <button className="btn-ayuda">Ayuda</button>
-          <button className="btn-volver" onClick={onGoBack}>Volver atrás</button>
+          <button className="btn-volver" onClick={goBack}>Volver atrás</button>
         </div>
+
         <div className="header-content">
           <h1 className="local-nombre">{localData.nombre}</h1>
           <p className="local-descripcion">{localData.descripcion}</p>
@@ -258,18 +385,31 @@ const LocalAmpliado = ({ local, onGoBack }) => {
 
           <section className="calificacion-section">
             <div className="calificacion-box">
-              <h3>Calificación de los clientes</h3>
-              
-              {/* Calificación promedio */}
-              <div className="average-rating-section">
-                <StarRating
-                  empresaId={local.empresa_id}
-                  userRating={0}
-                  averageRating={averageRating}
-                  totalRatings={totalRatings}
-                  isReadOnly={true}
-                  showAverage={true}
-                />
+              {/* Promedio de calificación (solo lectura) */}
+              <div className="average-rating-display">
+                <h3>Calificación de los clientes</h3>
+                <div className="rating-summary">
+                  <div className="stars-display">
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      let starClass = 'star-display empty';
+                      if (star <= Math.floor(averageRating)) {
+                        starClass = 'star-display filled';
+                      } else if (star === Math.ceil(averageRating) && averageRating % 1 !== 0) {
+                        starClass = 'star-display half';
+                      }
+                      return (
+                        <FaStar
+                          key={star}
+                          className={starClass}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="rating-info">
+                    <span className="rating-number">{averageRating.toFixed(1)}</span>
+                    <span className="rating-count">({totalRatings} {totalRatings === 1 ? 'calificación' : 'calificaciones'})</span>
+                  </div>
+                </div>
               </div>
 
               {/* Calificación del usuario (solo si está logueado como usuario personal) */}
@@ -301,15 +441,77 @@ const LocalAmpliado = ({ local, onGoBack }) => {
 
 
         <section className="galeria-section">
-          {localData.imagenes && Array.isArray(localData.imagenes) && localData.imagenes.length > 0 ? 
-            localData.imagenes.map((imagen, index) => (
-              <div key={index} className="galeria-item">
-                <img src={imagen} alt={`${localData.nombre} - Imagen ${index + 1}`} />
+          <h2>Galería de Imágenes</h2>
+          {(() => {
+            const limitedImages = getLimitedImages();
+            return limitedImages.length > 0 ? (
+              <div className="galeria-carousel">
+                {/* Flechas de navegación del carrusel */}
+                {limitedImages.length > 3 && (
+                  <>
+                    <button 
+                      className="galeria-arrow galeria-arrow-left"
+                      onClick={prevImage}
+                      aria-label="Imagen anterior"
+                    >
+                      <FaChevronLeft />
+                    </button>
+                    <button 
+                      className="galeria-arrow galeria-arrow-right"
+                      onClick={nextImage}
+                      aria-label="Imagen siguiente"
+                    >
+                      <FaChevronRight />
+                    </button>
+                  </>
+                )}
+
+                {/* Contenedor de imágenes del carrusel */}
+                <div className="galeria-images-container">
+                  <div 
+                    className="galeria-images-track"
+                    style={{
+                      transform: `translateX(-${currentImageIndex * (100 / 3)}%)`
+                    }}
+                  >
+                    {limitedImages.map((imagen, index) => (
+                      <div key={index} className="galeria-image-item">
+                        <img 
+                          src={imagen} 
+                          alt={`${localData.nombre} - Imagen ${index + 1}`}
+                          onClick={() => setCurrentImageIndex(index)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Indicadores del carrusel */}
+                {limitedImages.length > 3 && (
+                  <div className="galeria-indicators">
+                    {Array.from({ length: Math.ceil(limitedImages.length / 3) }).map((_, index) => (
+                      <button
+                        key={index}
+                        className={`galeria-indicator ${Math.floor(currentImageIndex / 3) === index ? 'active' : ''}`}
+                        onClick={() => setCurrentImageIndex(index * 3)}
+                        aria-label={`Ir a grupo ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Contador de imágenes */}
+                <div className="galeria-counter">
+                  {currentImageIndex + 1} de {limitedImages.length}
+                  {localData.imagenes.length > 5 && (
+                    <span className="limit-notice"> (máximo 5 mostradas)</span>
+                  )}
+                </div>
               </div>
-            )) : (
+            ) : (
               <p>No hay imágenes disponibles</p>
-            )
-          }
+            );
+          })()}
         </section>
       </main>
 

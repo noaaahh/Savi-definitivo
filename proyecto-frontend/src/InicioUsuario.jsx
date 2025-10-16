@@ -4,7 +4,7 @@ import { FaInstagram, FaLinkedin, FaWhatsapp, FaSearch } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
 import { BsFilterLeft } from "react-icons/bs";
 import LocalAmpliado from "./LocalAmpliado";
-import TopActionHeader from './layout/TopActionHeader';
+import NavigationBar from './components/NavigationBar';
 
 const InicioUsuario = ({ onBack, onGoInicio }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -165,9 +165,11 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
 
   return (
     <div className="inicioUsuario">
-      <TopActionHeader
-        leftButtons={[{ label: 'Inicio', onClick: onGoInicio }]}
-        rightButtons={[{ label: 'Volver atrás', onClick: onBack }]}
+      <NavigationBar
+        leftButtons={[
+          { label: 'Inicio', onClick: onGoInicio, primary: true },
+          { label: 'Volver atrás', onClick: onBack, primary: false }
+        ]}
       />
       <section className="inicioUsuario__hero">
         <img
@@ -274,12 +276,30 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
             </button>
           </div>
         ) : cards.length > 0 ? (
-          cards.map((empresa) => (
+          cards.map((empresa) => {
+            // Obtener la primera imagen del local o usar imagen por defecto
+            let imagenUrl = 'https://i.imgur.com/ZifMmLa.jpeg'; // Imagen por defecto
+            
+            if (empresa.imagenes) {
+              try {
+                const imagenes = JSON.parse(empresa.imagenes);
+                if (imagenes && imagenes.length > 0) {
+                  imagenUrl = imagenes[0];
+                }
+              } catch (e) {
+                console.error('Error al parsear imágenes:', e);
+              }
+            }
+
+            return (
             <div
               key={empresa.empresa_id || empresa.id}
               className="inicioUsuario__card"
               style={{
-                backgroundImage: `url(${empresa.imagen || 'https://i.imgur.com/ZifMmLa.jpeg'})`
+                backgroundImage: `url(${imagenUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
               }}
             >
               <div className="inicioUsuario__card-overlay">
@@ -305,7 +325,8 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
                 </div>
               </div>
             </div>
-          ))
+            );
+          })
         ) : (
           <div className="no-results">
             <p>No se encontraron locales que coincidan con tu búsqueda.</p>

@@ -9,6 +9,7 @@ const router = express.Router();
 router.post('/register', EmpresaController.registerEmpresa);
 router.post('/login', EmpresaController.loginEmpresa);
 router.get('/', EmpresaController.getAllEmpresas);
+router.get('/ultimos', EmpresaController.getUltimosLocales);
 router.get('/:id', EmpresaController.getEmpresaById);
 
 // Rutas protegidas (requieren autenticación)

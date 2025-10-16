@@ -136,7 +136,7 @@ export default function EditarPerfil() {
           window.dispatchEvent(new Event('storage'));
           
           // Mostrar mensaje de éxito
-          alert("Cambios guardados exitosamente en la base de datos");
+          alert("¡Cambios guardados exitosamente!");
           
           // Redirigir al perfil con delay para asegurar actualización
           setTimeout(() => {

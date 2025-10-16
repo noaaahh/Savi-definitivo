@@ -5,7 +5,6 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import empresaRoutes from './routes/empresaRoutes.js';
-import calificacionRoutes from './routes/calificacionRoutes.js';
 import { connectDB, isDBConnected } from './config/db.js';
 
 // Cargar variables de entorno desde el archivo .env
@@ -32,7 +31,6 @@ app.use('/api/auth', authRoutes); // login, etc.
 app.use('/api/users', userRoutes); // registro, perfil, etc.
 app.use('/api/contact', contactRoutes); // endpoint para mensajes de contacto
 app.use('/api/empresas', empresaRoutes); // registro, login y gestión de empresas
-app.use('/api/calificaciones', calificacionRoutes); // calificaciones de empresas
 
 // Endpoint de salud para que nginx/monitoring verifique el estado.
 app.get('/health', (req, res) => {

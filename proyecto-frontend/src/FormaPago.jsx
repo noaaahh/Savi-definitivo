@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
 import "./FormaPago.css";
+import { goBack } from './utils/navigation';
 
 export default function FormaPago() {
   const [plan, setPlan] = useState("mensual");
@@ -54,7 +55,7 @@ export default function FormaPago() {
       <section className="membresia-hero">
         <div className="nav-links">
           <button onClick={() => (window.location.hash = '#inicio')}>Inicio</button>
-          <button className="btn-secondary" onClick={() => (window.location.hash = '#membresias')}>Volver atrás</button>
+          <button className="btn-secondary" onClick={goBack}>Volver atrás</button>
         </div>
         <h1 className="membresia-title">{planInfo.nombre} - Opciones de pago:</h1>
       </section>

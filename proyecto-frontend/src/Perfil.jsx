@@ -5,6 +5,7 @@ import { FaInstagram, FaLinkedin, FaWhatsapp, FaRegEdit } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
 import ImageUpload from "./components/ImageUpload";
 import "./Perfil.css";
+import { goBack } from './utils/navigation';
 
 export default function Perfil({ onEditPerfil }) {
   const { user } = useAuth();
@@ -47,7 +48,7 @@ export default function Perfil({ onEditPerfil }) {
       <section className="perfil-hero">
         <div className="nav-links">
           <button onClick={() => (window.location.hash = '#inicio')}>Inicio</button>
-          <button className="btn-secondary" onClick={() => (window.location.hash = '#registro')}>Volver atrás</button>
+          <button className="btn-secondary" onClick={goBack}>Volver atrás</button>
         </div>
         <h1 className="perfil-title">
           {empresa ? empresa.nombre : 'Mi Perfil'} <span className="lapiz" aria-hidden="true"><FaRegEdit /></span>
