@@ -38,7 +38,7 @@ const LocalAmpliado = ({ local, onGoBack }) => {
     direccion: local.direccion || "Sin dirección",
     telefono: local.contacto || local.telefono || "Sin teléfono",
     email: local.email || "Sin email",
-    calificacion: 4.5, // Valor por defecto
+    calificacion: 0, // Valor por defecto
     horario: local.horario || "Sin horario",
     accesibilidades: local.accesibilidad ? Object.entries(local.accesibilidad)
       .filter(([key, value]) => value === true)
@@ -77,7 +77,7 @@ const LocalAmpliado = ({ local, onGoBack }) => {
     direccion: "Carlos Quijano 1067, apto 9",
     telefono: "099 999 999",
     email: "contacto@estrellafresca.com.uy",
-    calificacion: 4.5,
+    calificacion: 0,
     horario: "Lun a Vie 8:00 - 21:00",
     accesibilidades: [
       "Rampa",
@@ -168,7 +168,7 @@ const LocalAmpliado = ({ local, onGoBack }) => {
       } else {
         // Valor por defecto si no hay calificaciones
         console.log('No hay calificaciones, usando valor por defecto');
-        setAverageRating(4.5);
+        setAverageRating(0);
         setTotalRatings(0);
       }
       
@@ -198,6 +198,9 @@ const LocalAmpliado = ({ local, onGoBack }) => {
       return;
     }
 
+    // Actualizar el estado inmediatamente para feedback visual
+    setUserRating(rating);
+    
     setRatingLoading(true);
     try {
       // Guardar la calificación del usuario
@@ -250,10 +253,10 @@ const LocalAmpliado = ({ local, onGoBack }) => {
     return 'https://i.imgur.com/DhnHKJr.png';
   };
 
-  // Obtener las imágenes limitadas a 5 máximo
+  // Obtener las imágenes limitadas a 9 máximo
   const getLimitedImages = () => {
     if (localData.imagenes && Array.isArray(localData.imagenes) && localData.imagenes.length > 0) {
-      return localData.imagenes.slice(0, 5); // Límite de 5 imágenes
+      return localData.imagenes.slice(0, 9); // Límite de 9 imágenes
     }
     return [];
   };
@@ -323,7 +326,7 @@ const LocalAmpliado = ({ local, onGoBack }) => {
           }}
         />
         <div className="header-buttons">
-          <button className="btn-ayuda">Ayuda</button>
+          <button className="btn-inicio" onClick={() => (window.location.hash = '#inicio')}>Inicio</button>
           <button className="btn-volver" onClick={goBack}>Volver atrás</button>
         </div>
 
@@ -388,28 +391,46 @@ const LocalAmpliado = ({ local, onGoBack }) => {
               {/* Promedio de calificación (solo lectura) */}
               <div className="average-rating-display">
                 <h3>Calificación de los clientes</h3>
-                <div className="rating-summary">
-                  <div className="stars-display">
-                    {[1, 2, 3, 4, 5].map((star) => {
-                      let starClass = 'star-display empty';
-                      if (star <= Math.floor(averageRating)) {
-                        starClass = 'star-display filled';
-                      } else if (star === Math.ceil(averageRating) && averageRating % 1 !== 0) {
-                        starClass = 'star-display half';
-                      }
-                      return (
+                {totalRatings > 0 ? (
+                  <div className="rating-summary">
+                    <div className="stars-display">
+                      {[1, 2, 3, 4, 5].map((star) => {
+                        let starClass = 'star-display empty';
+                        if (star <= Math.floor(averageRating)) {
+                          starClass = 'star-display filled';
+                        } else if (star === Math.ceil(averageRating) && averageRating % 1 !== 0) {
+                          starClass = 'star-display half';
+                        }
+                        return (
+                          <FaStar
+                            key={star}
+                            className={starClass}
+                          />
+                        );
+                      })}
+                    </div>
+                    <div className="rating-info">
+                      <span className="rating-number">{averageRating.toFixed(1)}</span>
+                      <span className="rating-count">({totalRatings} {totalRatings === 1 ? 'calificación' : 'calificaciones'})</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="no-ratings-message">
+                    <div className="stars-display">
+                      {[1, 2, 3, 4, 5].map((star) => (
                         <FaStar
                           key={star}
-                          className={starClass}
+                          className="star-display empty"
                         />
-                      );
-                    })}
+                      ))}
+                    </div>
+                    <div className="rating-info">
+                      <span className="rating-number">0.0</span>
+                      <span className="rating-count">(0 calificaciones)</span>
+                    </div>
+                    <p className="first-rating-message">¡Se el primero en calificar este lugar!</p>
                   </div>
-                  <div className="rating-info">
-                    <span className="rating-number">{averageRating.toFixed(1)}</span>
-                    <span className="rating-count">({totalRatings} {totalRatings === 1 ? 'calificación' : 'calificaciones'})</span>
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Calificación del usuario (solo si está logueado como usuario personal) */}
@@ -503,8 +524,8 @@ const LocalAmpliado = ({ local, onGoBack }) => {
                 {/* Contador de imágenes */}
                 <div className="galeria-counter">
                   {currentImageIndex + 1} de {limitedImages.length}
-                  {localData.imagenes.length > 5 && (
-                    <span className="limit-notice"> (máximo 5 mostradas)</span>
+                  {localData.imagenes.length > 9 && (
+                    <span className="limit-notice"> (máximo 9 mostradas)</span>
                   )}
                 </div>
               </div>

@@ -5,6 +5,7 @@ import { MdMailOutline } from "react-icons/md";
 import { BsFilterLeft } from "react-icons/bs";
 import LocalAmpliado from "./LocalAmpliado";
 import NavigationBar from './components/NavigationBar';
+import { goBack } from './utils/navigation';
 
 const InicioUsuario = ({ onBack, onGoInicio }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -168,7 +169,7 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
       <NavigationBar
         leftButtons={[
           { label: 'Inicio', onClick: onGoInicio, primary: true },
-          { label: 'Volver atrás', onClick: onBack, primary: false }
+          { label: 'Volver atrás', onClick: goBack, primary: false }
         ]}
       />
       <section className="inicioUsuario__hero">

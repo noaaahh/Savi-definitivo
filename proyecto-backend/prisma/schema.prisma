@@ -72,7 +72,7 @@ model Accesibilidad {
   otros_servicios          String? @map("otros_servicios")
   
   // Relación con empresa
-  empresa Empresa @relation(fields: [empresa_id], references: [empresa_id])
+  empresa Empresa @relation(fields: [empresa_id], references: [empresa_id], onDelete: Cascade)
   
   @@map("accesibilidad")
 }
@@ -85,8 +85,8 @@ model Calificacion {
   fecha_creacion  DateTime @default(now()) @map("fecha_creacion")
 
   // Relaciones
-  usuario Usuario @relation(fields: [usuario_id], references: [usuario_id])
-  empresa Empresa @relation(fields: [empresa_id], references: [empresa_id])
+  usuario Usuario @relation(fields: [usuario_id], references: [usuario_id], onDelete: Cascade)
+  empresa Empresa @relation(fields: [empresa_id], references: [empresa_id], onDelete: Cascade)
 
   // Un usuario solo puede calificar una empresa una vez
   @@unique([usuario_id, empresa_id])

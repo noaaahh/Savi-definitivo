@@ -48,7 +48,7 @@ export default function Perfil({ onEditPerfil }) {
       <section className="perfil-hero">
         <div className="nav-links">
           <button onClick={() => (window.location.hash = '#inicio')}>Inicio</button>
-          <button className="btn-secondary" onClick={goBack}>Volver atrás</button>
+          <button className="btn-secondary" onClick={() => (window.location.hash = '#inicio')}>Ver perfiles</button>
         </div>
         <h1 className="perfil-title">
           {empresa ? empresa.nombre : 'Mi Perfil'} <span className="lapiz" aria-hidden="true"><FaRegEdit /></span>
@@ -299,6 +299,9 @@ export default function Perfil({ onEditPerfil }) {
               }
             })()}
             onImagesUploaded={(newImages) => {
+              // Asegurar que newImages sea un array
+              const newImagesArray = Array.isArray(newImages) ? newImages : [];
+              
               // Actualizar el estado local con las nuevas imágenes
               const existingImages = (() => {
                 try {
@@ -314,7 +317,7 @@ export default function Perfil({ onEditPerfil }) {
               
               const updatedEmpresa = {
                 ...empresa,
-                imagenes: JSON.stringify([...existingImages, ...newImages])
+                imagenes: JSON.stringify([...existingImages, ...newImagesArray])
               };
               setEmpresa(updatedEmpresa);
               

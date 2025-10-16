@@ -14,6 +14,8 @@ export const registerEmpresa = async ({
   serviciosAccesibilidad, 
   detallesAccesibilidad 
 }) => {
+  console.log('registerEmpresa service - Datos recibidos:', { nombre, email, serviciosAccesibilidad, detallesAccesibilidad });
+  
   // Verificar si la empresa ya existe
   const empresaExists = await prisma.empresa.findUnique({ where: { email } });
   if (empresaExists) throw new Error('La empresa ya existe');
@@ -77,6 +79,14 @@ export const findByEmail = async (email) => {
       detallesAccesibilidad: true
     }
   });
+};
+
+/**
+ * getEmpresaByEmail
+ * Busca una empresa por email (alias para findByEmail).
+ */
+export const getEmpresaByEmail = async (email) => {
+  return await findByEmail(email);
 };
 
 /**
@@ -146,6 +156,9 @@ export const updateEmpresaPerfil = async (empresaId, datosPerfil) => {
  * Actualiza los datos de accesibilidad de una empresa existente.
  */
 export const updateEmpresaAccesibilidad = async (empresaId, serviciosAccesibilidad, detallesAccesibilidad) => {
+  console.log('updateEmpresaAccesibilidad - ID:', empresaId);
+  console.log('updateEmpresaAccesibilidad - Servicios recibidos:', serviciosAccesibilidad);
+  
   // Primero buscar si ya existe un registro de accesibilidad para esta empresa
   const accesibilidadExistente = await prisma.accesibilidad.findFirst({
     where: { empresa_id: empresaId }
@@ -191,11 +204,74 @@ export const updateEmpresaAccesibilidad = async (empresaId, serviciosAccesibilid
   }
 };
 
-export const updateImagenes = async (empresaId, imageUrls) => {
+export const updateImagenes = async (empresaId, newImageUrls) => {
+  // Primero obtener las imágenes existentes
+  const empresa = await prisma.empresa.findUnique({
+    where: { empresa_id: empresaId },
+    select: { imagenes: true }
+  });
+
+  // Parsear las imágenes existentes o usar array vacío si no hay
+  let imagenesExistentes = [];
+  if (empresa && empresa.imagenes) {
+    try {
+      imagenesExistentes = JSON.parse(empresa.imagenes);
+    } catch (error) {
+      console.error('Error parseando imágenes existentes:', error);
+      imagenesExistentes = [];
+    }
+  }
+
+  // Combinar imágenes existentes con las nuevas
+  const todasLasImagenes = [...imagenesExistentes, ...newImageUrls];
+
+  // Actualizar con todas las imágenes
   return await prisma.empresa.update({
     where: { empresa_id: empresaId },
     data: {
-      imagenes: JSON.stringify(imageUrls)
+      imagenes: JSON.stringify(todasLasImagenes)
     }
+  });
+};
+
+// Nueva función para reemplazar completamente todas las imágenes
+export const replaceAllImages = async (empresaId, allImages) => {
+  console.log('replaceAllImages - ID:', empresaId);
+  console.log('replaceAllImages - Imágenes a guardar:', allImages?.length || 0);
+  
+  return await prisma.empresa.update({
+    where: { empresa_id: empresaId },
+    data: {
+      imagenes: JSON.stringify(allImages)
+    }
+  });
+};
+
+/**
+ * createEmpresa
+ * Crea una nueva empresa (alias para registerEmpresa).
+ */
+export const createEmpresa = async (empresaData) => {
+  return await registerEmpresa(empresaData);
+};
+
+/**
+ * updateEmpresa
+ * Actualiza una empresa existente.
+ */
+export const updateEmpresa = async (id, empresaData) => {
+  return await prisma.empresa.update({
+    where: { empresa_id: parseInt(id) },
+    data: empresaData
+  });
+};
+
+/**
+ * deleteEmpresa
+ * Elimina una empresa.
+ */
+export const deleteEmpresa = async (id) => {
+  return await prisma.empresa.delete({
+    where: { empresa_id: parseInt(id) }
   });
 };

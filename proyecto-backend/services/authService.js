@@ -43,8 +43,25 @@ export const login = async ({ email, password }) => {
     userData.contacto = user.contacto;
     userData.horario = user.horario;
     userData.publicado = user.publicado;
-    userData.accesibilidad = user.accesibilidad;
     userData.imagenes = user.imagenes;
+    
+    // Mapear datos de accesibilidad desde detallesAccesibilidad
+    const accesibilidad = user.detallesAccesibilidad[0] || {};
+    userData.accesibilidad = {
+      ramp: accesibilidad.rampa,
+      banoAdaptado: accesibilidad.bano_accesible,
+      braille: accesibilidad.senalizacion_braille,
+      interprete: false,
+      pisosAntideslizantes: accesibilidad.pisos_antideslizantes,
+      mesasSillasAdaptadas: accesibilidad.mesas_sillas_adaptadas,
+      elevator: accesibilidad.ascensor,
+      pasillos: accesibilidad.pasillos_min_90cm,
+      puertaAncha: accesibilidad.puerta_80cm,
+      contrasteColores: accesibilidad.contraste_colores,
+      guiasPodotactiles: accesibilidad.guias_podotactiles,
+      alarmasEmergencia: accesibilidad.alarmas_emergencia,
+      sistemaAudifonos: accesibilidad.sistema_audifonos
+    };
   }
   
   // Firmar token con secret y expiración configurados en config/jwt.js

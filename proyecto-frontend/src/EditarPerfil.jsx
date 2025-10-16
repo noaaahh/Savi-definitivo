@@ -3,11 +3,17 @@ import { FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { useAuth } from "./hooks/useAuth";
+import { goBack } from './utils/navigation';
 
 import "./EditarPerfil.css";
 
 export default function EditarPerfil() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  
+  console.log('EditarPerfil - Componente renderizado');
+  console.log('EditarPerfil - isAuthenticated:', isAuthenticated);
+  console.log('EditarPerfil - user:', user);
+  
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
@@ -40,6 +46,9 @@ export default function EditarPerfil() {
   // Cargar datos actuales del usuario
   useEffect(() => {
     if (user) {
+      console.log('EditarPerfil - Usuario completo:', user);
+      console.log('EditarPerfil - Datos de accesibilidad:', user.accesibilidad);
+      
       setName(user.nombre || "");
       setDescription(user.descripcion || "Restaurante....");
       setAddress(user.direccion || "Pocitos y...");
@@ -49,7 +58,9 @@ export default function EditarPerfil() {
       
       // Cargar datos de accesibilidad si existen
       if (user.accesibilidad) {
-        setServiciosAccesibilidad({
+        console.log('EditarPerfil - Accesibilidad completa del usuario:', user.accesibilidad);
+        
+        const accesibilidadData = {
           pasillosMin90cm: user.accesibilidad.pasillos || false,
           rampa: user.accesibilidad.ramp || false,
           puerta80cm: user.accesibilidad.puertaAncha || false,
@@ -62,10 +73,43 @@ export default function EditarPerfil() {
           guiasPodotactiles: user.accesibilidad.guiasPodotactiles || false,
           alarmasEmergencia: user.accesibilidad.alarmasEmergencia || false,
           sistemaAudifonos: user.accesibilidad.sistemaAudifonos || false
+        };
+        
+        console.log('EditarPerfil - Datos de accesibilidad mapeados:', accesibilidadData);
+        setServiciosAccesibilidad(accesibilidadData);
+      } else {
+        console.log('EditarPerfil - No hay datos de accesibilidad en el usuario');
+        // Mantener los valores por defecto si no hay datos
+        setServiciosAccesibilidad({
+          pasillosMin90cm: false,
+          rampa: false,
+          puerta80cm: false,
+          pisosAntideslizantes: false,
+          banoAccesible: false,
+          mesasSillasAdaptadas: false,
+          ascensor: true, // Valor por defecto
+          senalizacionBraille: false,
+          contrasteColores: false,
+          guiasPodotactiles: false,
+          alarmasEmergencia: false,
+          sistemaAudifonos: false
         });
       }
     }
   }, [user]);
+
+  // Si no está autenticado, mostrar mensaje
+  if (!isAuthenticated || !user) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h2>Acceso no autorizado</h2>
+        <p>Debes iniciar sesión para acceder a esta página.</p>
+        <button onClick={() => window.location.hash = '#inicio'}>
+          Ir al inicio
+        </button>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,6 +148,7 @@ export default function EditarPerfil() {
 
         console.log('EditarPerfil - Datos a enviar:', datosPerfil);
         console.log('EditarPerfil - Accesibilidad a enviar:', accesibilidadParaBackend);
+        console.log('EditarPerfil - Estado actual de serviciosAccesibilidad:', serviciosAccesibilidad);
 
         // Enviar datos al backend
         const response = await fetch(`http://localhost:3001/api/empresas/${empresaId}/perfil`, {
@@ -129,6 +174,8 @@ export default function EditarPerfil() {
             publicado: result.empresa.publicado,
             accesibilidad: result.empresa.accesibilidad
           };
+          
+          console.log('EditarPerfil - Usuario actualizado con accesibilidad:', updatedUser);
           
           localStorage.setItem('user', JSON.stringify(updatedUser));
           
@@ -159,67 +206,79 @@ export default function EditarPerfil() {
   };
 
   return (
-    <div className="editar-modal-backdrop" onClick={() => window.history.back()}>
+    <div className="editar-modal-backdrop" onClick={goBack}>
       <div className="editar-modal-card" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
-        <button className="close-x" aria-label="Cerrar" onClick={() => window.history.back()}>×</button>
+        <button className="close-x" aria-label="Cerrar" onClick={goBack}>×</button>
         <h1 className="editar-title">Edita tu perfil <span className="lapiz" aria-hidden="true"><FaRegEdit /></span></h1>
         <div className="editar-subtitle">Elige la información sobre tu local</div>
 
         <form onSubmit={handleSubmit} className="editar-form">
-            <label className="sr-only" htmlFor="nombre">Nombre</label>
-            <input
-              id="nombre"
-              className="input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Nombre de la empresa"
-            />
+            <div className="field-group">
+              <label htmlFor="nombre" className="field-label">Nombre:</label>
+              <input
+                id="nombre"
+                className="input"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ingresa el nombre de tu empresa"
+              />
+            </div>
 
-            <label className="sr-only" htmlFor="descripcion">Descripción</label>
-            <input
-              id="descripcion"
-              className="input"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Descripción"
-            />
+            <div className="field-group">
+              <label htmlFor="descripcion" className="field-label">Descripción:</label>
+              <input
+                id="descripcion"
+                className="input"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Ingresa una descripción de tu empresa"
+              />
+            </div>
 
-            <label className="sr-only" htmlFor="direccion">Dirección</label>
-            <input
-              id="direccion"
-              className="input"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Dirección"
-            />
+            <div className="field-group">
+              <label htmlFor="direccion" className="field-label">Dirección:</label>
+              <input
+                id="direccion"
+                className="input"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Ingresa tu dirección"
+              />
+            </div>
 
-            <label className="sr-only" htmlFor="contacto">Contacto</label>
-            <input
-              id="contacto"
-              className="input"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              placeholder="Teléfono"
-            />
+            <div className="field-group">
+              <label htmlFor="contacto" className="field-label">Teléfono:</label>
+              <input
+                id="contacto"
+                className="input"
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                placeholder="Ingresa tu número de teléfono"
+              />
+            </div>
 
-            <label className="sr-only" htmlFor="email">Email</label>
-            <input
-              id="email"
-              className="input"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-            />
+            <div className="field-group">
+              <label htmlFor="email" className="field-label">Email:</label>
+              <input
+                id="email"
+                className="input"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Ingresa tu email"
+              />
+            </div>
 
-            <label className="sr-only" htmlFor="horario">Horario</label>
-            <input
-              id="horario"
-              className="input"
-              value={schedule}
-              onChange={(e) => setSchedule(e.target.value)}
-              placeholder="Horario de atención (de 08 am hasta 20 pm)"
-            />
+            <div className="field-group">
+              <label htmlFor="horario" className="field-label">Horario:</label>
+              <input
+                id="horario"
+                className="input"
+                value={schedule}
+                onChange={(e) => setSchedule(e.target.value)}
+                placeholder="Ingresa tu horario de atención"
+              />
+            </div>
 
             <div className="accesibilidad">
               <div className="acc-title">Accesibilidad:</div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
+import { goBack } from './utils/navigation';
 import "./Membresias.css";
 
 export default function Membresias() {
@@ -15,8 +16,8 @@ export default function Membresias() {
     <div className="membresias-page">
       <section className="membresias-hero">
         <div className="nav-links">
-          <button onClick={() => (window.location.hash = '#inicio')}>Ayuda</button>
-          <button className="btn-secondary" onClick={() => (window.location.hash = '#registroempresa')}>Volver atrás</button>
+          <button onClick={() => (window.location.hash = '#inicio')}>Inicio</button>
+          <button className="btn-secondary" onClick={goBack}>Volver atrás</button>
         </div>
         <h1 className="membresias-title">Opciones de membresía:</h1>
       </section>

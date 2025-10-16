@@ -22,6 +22,13 @@ const ImageUpload = ({ empresaId, onImagesUploaded, existingImages = [] }) => {
       return true;
     });
 
+    // Verificar límite de 9 imágenes totales
+    const totalImages = uploadedImages.length + selectedFiles.length + validFiles.length;
+    if (totalImages > 9) {
+      alert(`Máximo 9 imágenes permitidas. Actualmente tienes ${uploadedImages.length} imágenes y estás intentando agregar ${validFiles.length} más.`);
+      return;
+    }
+
     setSelectedFiles(prev => [...prev, ...validFiles]);
     
     // Crear previews
@@ -39,8 +46,123 @@ const ImageUpload = ({ empresaId, onImagesUploaded, existingImages = [] }) => {
     setPreviewUrls(prev => prev.filter((_, i) => i !== index));
   };
 
-  const removeUploadedImage = (index) => {
-    setUploadedImages(prev => prev.filter((_, i) => i !== index));
+  const removeUploadedImage = async (index) => {
+    const imageToDelete = uploadedImages[index];
+    
+    if (!imageToDelete) {
+      alert('No se pudo encontrar la imagen a eliminar');
+      return;
+    }
+    
+    if (!confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
+      return;
+    }
+    
+    try {
+      console.log('Eliminando imagen:', imageToDelete);
+      console.log('Total de imágenes antes:', uploadedImages.length);
+      
+      // Filtrar la imagen a eliminar del array local
+      const imagenesRestantes = uploadedImages.filter((_, i) => i !== index);
+      
+      console.log('Imágenes restantes:', imagenesRestantes.length);
+      console.log('Enviando al backend:', imagenesRestantes);
+      
+      // Actualizar en el backend usando PUT
+      const response = await fetch(`http://localhost:3001/api/empresas/${empresaId}/imagenes`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imagenes: imagenesRestantes })
+      });
+      
+      console.log('Respuesta del servidor:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error del servidor:', errorText);
+        throw new Error(`Error del servidor: ${response.status} - ${errorText}`);
+      }
+      
+      const result = await response.json();
+      console.log('Resultado del servidor:', result);
+      
+      if (result.success) {
+        // Actualizar el estado local con las imágenes restantes
+        setUploadedImages(imagenesRestantes);
+        
+        // Notificar al componente padre sobre el cambio
+        if (onImagesUploaded) {
+          onImagesUploaded(imagenesRestantes);
+        }
+        
+        alert('Imagen eliminada exitosamente del backend y frontend');
+      } else {
+        throw new Error(result.error || 'Error al eliminar imagen');
+      }
+      
+    } catch (error) {
+      console.error('Error completo:', error);
+      alert(`Error al eliminar imagen: ${error.message}`);
+    }
+  };
+
+  // Función para seleccionar solo las primeras 9 imágenes
+  const selectOnlyFirst9 = async () => {
+    if (uploadedImages.length <= 9) {
+      alert('Ya tienes 9 imágenes o menos');
+      return;
+    }
+    
+    if (!confirm(`¿Quieres mantener solo las primeras 9 imágenes? Se eliminarán ${uploadedImages.length - 9} imágenes.`)) {
+      return;
+    }
+    
+    try {
+      const primeras9 = uploadedImages.slice(0, 9);
+      
+      console.log('Eliminando imágenes masivamente...');
+      console.log('Imágenes antes:', uploadedImages.length);
+      console.log('Imágenes después:', primeras9.length);
+      console.log('Imágenes a eliminar:', uploadedImages.length - 9);
+      
+      // Actualizar en el backend
+      const response = await fetch(`http://localhost:3001/api/empresas/${empresaId}/imagenes`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imagenes: primeras9 })
+      });
+      
+      console.log('Respuesta del servidor:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error del servidor:', errorText);
+        throw new Error(`Error del servidor: ${response.status} - ${errorText}`);
+      }
+      
+      const result = await response.json();
+      console.log('Resultado del servidor:', result);
+      
+      if (result.success) {
+        setUploadedImages(primeras9);
+        
+        if (onImagesUploaded) {
+          onImagesUploaded(primeras9);
+        }
+        
+        alert(`✅ Se mantuvieron solo las primeras 9 imágenes. Se eliminaron ${uploadedImages.length - 9} imágenes del backend y frontend.`);
+      } else {
+        throw new Error(result.error || 'Error al actualizar imágenes');
+      }
+      
+    } catch (error) {
+      console.error('Error:', error);
+      alert(`Error al actualizar imágenes: ${error.message}`);
+    }
   };
 
   const handleUpload = async () => {
@@ -65,11 +187,13 @@ const ImageUpload = ({ empresaId, onImagesUploaded, existingImages = [] }) => {
       const result = await response.json();
 
       if (response.ok && result.success) {
-        setUploadedImages(prev => [...prev, ...result.imagenes]);
+        // Usar las nuevas imágenes que se subieron
+        const newImages = result.imagenesNuevas || [];
+        setUploadedImages(prev => [...prev, ...newImages]);
         setSelectedFiles([]);
         setPreviewUrls([]);
         if (onImagesUploaded) {
-          onImagesUploaded(result.imagenes);
+          onImagesUploaded(newImages);
         }
         alert('Imágenes subidas exitosamente');
       } else {
@@ -109,8 +233,33 @@ const ImageUpload = ({ empresaId, onImagesUploaded, existingImages = [] }) => {
       )}
 
       {/* Subir nuevas imágenes */}
-      <div className="upload-section">
-        <h4>Subir nuevas imágenes:</h4>
+        <div className="upload-section">
+          <h4>Subir nuevas imágenes:</h4>
+          <p style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>
+            Máximo 9 imágenes totales. Actualmente tienes {uploadedImages.length} imágenes.
+          </p>
+          
+          {uploadedImages.length > 9 && (
+            <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#fff3cd', border: '1px solid #ffeaa7', borderRadius: '5px' }}>
+              <p style={{ margin: '0 0 10px 0', color: '#856404', fontWeight: 'bold' }}>
+                ⚠️ Tienes {uploadedImages.length} imágenes (límite: 9)
+              </p>
+              <button 
+                onClick={selectOnlyFirst9}
+                style={{
+                  backgroundColor: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '14px'
+                }}
+              >
+                🗑️ Mantener solo las primeras 9 imágenes
+              </button>
+            </div>
+          )}
         
         <div className="file-input-container">
           <input

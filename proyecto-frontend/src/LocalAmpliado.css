@@ -35,7 +35,7 @@
   }
   
   
-  .btn-ayuda {
+  .btn-inicio {
     background: #ffffff;
     color: #000000;
     border: none;
@@ -48,7 +48,7 @@
   }
   
   
-  .btn-ayuda:hover {
+  .btn-inicio:hover {
     background: #f0f0f0;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -321,6 +321,7 @@
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid #e0e0e0;
+    text-align: center;
   }
 
   .average-rating-display h3 {
@@ -328,6 +329,7 @@
     font-weight: 600;
     margin-bottom: 1rem;
     color: #333 !important;
+    text-align: center;
   }
 
   .rating-summary {
@@ -378,6 +380,33 @@
     font-size: 0.9rem;
     color: #666 !important;
     line-height: 1;
+  }
+
+  .no-ratings-message {
+    text-align: center;
+  }
+
+  .no-ratings-message .stars-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .no-ratings-message .rating-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .first-rating-message {
+    color: #007bff;
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 10px;
+    font-style: italic;
   }
 
   .user-rating-section {

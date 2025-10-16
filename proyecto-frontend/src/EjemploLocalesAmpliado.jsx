@@ -1,5 +1,6 @@
 import React from "react";
 import LocalAmpliado from "./LocalAmpliado";
+import { goBack } from './utils/navigation';
 
 
 const EjemploLocalAmpliado = () => {
@@ -9,7 +10,7 @@ const EjemploLocalAmpliado = () => {
     direccion: "Carlos Quijano 1067, apto 9",
     telefono: "099 999 999",
     email: "contacto@estrellafresca.com.uy",
-    calificacion: 4.5,
+    calificacion: 0,
     accesibilidades: [
       "Rampa",
       "Atención prioritaria",
@@ -25,16 +26,11 @@ const EjemploLocalAmpliado = () => {
   };
 
 
-  const handleGoBack = () => {
-    console.log("Volver atrás");
-  };
-
-
   return (
     <div>
       <LocalAmpliado
         local={localEjemplo}
-        onGoBack={handleGoBack}
+        onGoBack={goBack}
       />
     </div>
   );

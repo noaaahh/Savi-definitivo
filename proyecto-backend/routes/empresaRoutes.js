@@ -26,4 +26,10 @@ router.post('/:id/imagenes', (req, res, next) => {
   next();
 }, EmpresaController.uploadImagenes);
 
+// Ruta para actualizar todas las imágenes (eliminar las que no queremos)
+router.put('/:id/imagenes', EmpresaController.updateAllImages);
+
+// Ruta para eliminar imagen específica
+router.delete('/:id/imagenes', EmpresaController.deleteImagen);
+
 export default router;
