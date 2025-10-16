@@ -189,23 +189,58 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
           </button>
           {isFilterOpen && (
             <div className="inicioUsuario__filter-panel">
-              <label><input type="checkbox" name="rampa" checked={filters.rampa} onChange={handleFilterChange} /> Rampa</label>
-              <label><input type="checkbox" name="banoAccesible" checked={filters.banoAccesible} onChange={handleFilterChange} /> Baño adaptado</label>
-              <label><input type="checkbox" name="braille" checked={filters.braille} onChange={handleFilterChange} /> Braille</label>
-              <label><input type="checkbox" name="interprete" checked={filters.interprete} onChange={handleFilterChange} /> Intérprete</label>
-              <label><input type="checkbox" name="pisosAntideslizantes" checked={filters.pisosAntideslizantes} onChange={handleFilterChange} /> Pisos antideslizantes</label>
-              <label><input type="checkbox" name="mesasSillasAdaptadas" checked={filters.mesasSillasAdaptadas} onChange={handleFilterChange} /> Sillas adaptadas </label>
-              <label><input type="checkbox" name="ascensor" checked={filters.ascensor} onChange={handleFilterChange} /> Ascensor </label>
-              <label><input type="checkbox" name="pasillosMin90cm" checked={filters.pasillosMin90cm} onChange={handleFilterChange} /> Pasillos 90cm</label>
-              <label><input type="checkbox" name="puerta80cm" checked={filters.puerta80cm} onChange={handleFilterChange} /> Puerta ancha</label>
-
-              <br>
-              </br>
-
-              <label><input type="checkbox" name="contrasteColores" checked={filters.contrasteColores} onChange={handleFilterChange} /> Contraste Colores </label>
-              <label><input type="checkbox" name="guiasPodotactiles" checked={filters.guiasPodotactiles} onChange={handleFilterChange} /> Guías podotáctiles </label>
-              <label><input type="checkbox" name="alarmasEmergencia" checked={filters.alarmasEmergencia} onChange={handleFilterChange} /> Alarmas emergencia visuales y sonoras </label>
-              <label><input type="checkbox" name="sistemaAudifonos" checked={filters.sistemaAudifonos} onChange={handleFilterChange} /> Sistema de apoyo para personas con audífonos </label>
+              <label>
+                <input type="checkbox" name="rampa" checked={filters.rampa} onChange={handleFilterChange} />
+                Rampa
+              </label>
+              <label>
+                <input type="checkbox" name="banoAccesible" checked={filters.banoAccesible} onChange={handleFilterChange} />
+                Baño adaptado
+              </label>
+              <label>
+                <input type="checkbox" name="braille" checked={filters.braille} onChange={handleFilterChange} />
+                Braille
+              </label>
+              <label>
+                <input type="checkbox" name="interprete" checked={filters.interprete} onChange={handleFilterChange} />
+                Intérprete
+              </label>
+              <label>
+                <input type="checkbox" name="pisosAntideslizantes" checked={filters.pisosAntideslizantes} onChange={handleFilterChange} />
+                Pisos antideslizantes
+              </label>
+              <label>
+                <input type="checkbox" name="mesasSillasAdaptadas" checked={filters.mesasSillasAdaptadas} onChange={handleFilterChange} />
+                Sillas adaptadas
+              </label>
+              <label>
+                <input type="checkbox" name="ascensor" checked={filters.ascensor} onChange={handleFilterChange} />
+                Ascensor
+              </label>
+              <label>
+                <input type="checkbox" name="pasillosMin90cm" checked={filters.pasillosMin90cm} onChange={handleFilterChange} />
+                Pasillos 90cm
+              </label>
+              <label>
+                <input type="checkbox" name="puerta80cm" checked={filters.puerta80cm} onChange={handleFilterChange} />
+                Puerta ancha
+              </label>
+              <label>
+                <input type="checkbox" name="contrasteColores" checked={filters.contrasteColores} onChange={handleFilterChange} />
+                Contraste colores
+              </label>
+              <label>
+                <input type="checkbox" name="guiasPodotactiles" checked={filters.guiasPodotactiles} onChange={handleFilterChange} />
+                Guías podotáctiles
+              </label>
+              <label>
+                <input type="checkbox" name="alarmasEmergencia" checked={filters.alarmasEmergencia} onChange={handleFilterChange} />
+                Alarmas emergencia
+              </label>
+              <label>
+                <input type="checkbox" name="sistemaAudifonos" checked={filters.sistemaAudifonos} onChange={handleFilterChange} />
+                Sistema audífonos
+              </label>
             </div>
           )}
         </div>
