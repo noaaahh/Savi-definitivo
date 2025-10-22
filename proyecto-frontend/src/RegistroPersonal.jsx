@@ -35,7 +35,7 @@ export default function RegistroPersonal({ onBack, onGoInicio, onGoInicioUsuario
 
     try {
       // Enviar datos al backend
-      const response = await fetch('https://api-savi.anima.edu.uy/api/users/register', {
+      const response = await fetch('http://api-savi.anima.edu.uy/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
