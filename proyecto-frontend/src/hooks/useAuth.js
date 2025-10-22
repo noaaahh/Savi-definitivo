@@ -70,7 +70,7 @@ export function useAuth() {
 // automático de token/usuario; eso se debería gestionar donde se necesite.
 export async function registerUser(data) {
   try {
-    const res = await fetch('https://api-savi.anima.edu.uy/api/users/register', {
+    const res = await fetch('http://api-savi.anima.edu.uy/api/users/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -83,7 +83,7 @@ export async function registerUser(data) {
 
 export async function registerCompany(data) {
   try {
-    const res = await fetch('https://api-savi.anima.edu.uy/api/users/register-company', {
+    const res = await fetch('http://api-savi.anima.edu.uy/api/users/register-company', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -98,7 +98,7 @@ export async function registerCompany(data) {
 // Función que autentica al usuario con email y contraseña
 export async function login(email, password) {
   try {
-    const res = await fetch('https://api-savi.anima.edu.uy/api/auth/login', {
+    const res = await fetch('http://api-savi.anima.edu.uy/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })

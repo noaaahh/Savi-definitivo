@@ -151,7 +151,7 @@ export default function EditarPerfil() {
         console.log('EditarPerfil - Estado actual de serviciosAccesibilidad:', serviciosAccesibilidad);
 
         // Enviar datos al backend
-        const response = await fetch(`https://api-savi.anima.edu.uy/api/empresas/${empresaId}/perfil`, {
+        const response = await fetch(`http://api-savi.anima.edu.uy/api/empresas/${empresaId}/perfil`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'

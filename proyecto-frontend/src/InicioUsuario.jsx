@@ -40,7 +40,7 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
   const handleCardClick = async (local) => {
     try {
       // Cargar datos completos de la empresa desde la API
-      const response = await fetch(`https://api-savi.anima.edu.uy/api/empresas/${local.empresa_id}`);
+      const response = await fetch(`http://api-savi.anima.edu.uy/api/empresas/${local.empresa_id}`);
       const data = await response.json();
       
       if (data.success) {
@@ -94,7 +94,7 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch('https://api-savi.anima.edu.uy/api/empresas');
+      const response = await fetch('http://api-savi.anima.edu.uy/api/empresas');
       const data = await response.json();
       console.log("Respuesta de la API:", data); // <-- Agregado para depuración
       if (data.success) {

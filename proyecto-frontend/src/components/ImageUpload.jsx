@@ -69,7 +69,7 @@ const ImageUpload = ({ empresaId, onImagesUploaded, existingImages = [] }) => {
       console.log('Enviando al backend:', imagenesRestantes);
       
       // Actualizar en el backend usando PUT
-      const response = await fetch(`https://api-savi.anima.edu.uy/api/empresas/${empresaId}/imagenes`, {
+      const response = await fetch(`http://api-savi.anima.edu.uy/api/empresas/${empresaId}/imagenes`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ const ImageUpload = ({ empresaId, onImagesUploaded, existingImages = [] }) => {
       console.log('Imágenes a eliminar:', uploadedImages.length - 9);
       
       // Actualizar en el backend
-      const response = await fetch(`https://api-savi.anima.edu.uy/api/empresas/${empresaId}/imagenes`, {
+      const response = await fetch(`http://api-savi.anima.edu.uy/api/empresas/${empresaId}/imagenes`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -179,7 +179,7 @@ const ImageUpload = ({ empresaId, onImagesUploaded, existingImages = [] }) => {
         formData.append('imagenes', file);
       });
 
-      const response = await fetch(`https://api-savi.anima.edu.uy/api/empresas/${empresaId}/imagenes`, {
+      const response = await fetch(`http://api-savi.anima.edu.uy/api/empresas/${empresaId}/imagenes`, {
         method: 'POST',
         body: formData
       });

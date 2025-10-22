@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 // Configurar CORS para permitir que el frontend en desarrollo acceda a la API.
 // origin: dirección del frontend (Vite por defecto en 5173).
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://savi.anima.edu.uy', 'https://www.savi.anima.edu.uy'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://savi.anima.edu.uy', 'http://www.savi.anima.edu.uy'],
   credentials: true
 }));
 

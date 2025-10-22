@@ -87,7 +87,7 @@ export default function RegistroEmpresa({ onBack }) {
       console.log('Datos completos a enviar:', datosEmpresa);
 
       // Llamada real al backend
-      const response = await fetch('https://api-savi.anima.edu.uy/api/empresas/register', {
+      const response = await fetch('http://api-savi.anima.edu.uy/api/empresas/register', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json' 

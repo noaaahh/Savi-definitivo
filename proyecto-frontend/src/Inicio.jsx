@@ -25,7 +25,7 @@ const Inicio = ({ onGoRegistro, onGoInicioUsuario }) => {
   const handleCardClick = async (local) => {
     try {
       // Cargar datos completos de la empresa desde la API
-      const response = await fetch(`https://api-savi.anima.edu.uy/api/empresas/${local.empresa_id}`);
+      const response = await fetch(`http://api-savi.anima.edu.uy/api/empresas/${local.empresa_id}`);
       const data = await response.json();
       
       if (data.success) {
@@ -50,7 +50,7 @@ const Inicio = ({ onGoRegistro, onGoInicioUsuario }) => {
   useEffect(() => {
     const fetchUltimosLocales = async () => {
       try {
-        const response = await fetch('https://api-savi.anima.edu.uy/api/empresas/ultimos');
+        const response = await fetch('http://api-savi.anima.edu.uy/api/empresas/ultimos');
         const data = await response.json();
         
         if (data.success) {
