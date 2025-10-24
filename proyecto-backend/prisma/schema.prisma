@@ -1,0 +1,95 @@
+// Este archivo define el esquema de la base de datos para Prisma
+// Ejecuta: npx prisma migrate dev --name init para crear la base de datos
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  usuario_id Int     @id @default(autoincrement()) @map("usuario_id")
+  nombre     String  @map("nombre")
+  email      String  @unique @map("email")
+  password   String  @map("contraseña")
+  publicado  Boolean @default(false) @map("publicado")
+  
+  // Relación con calificaciones
+  calificaciones Calificacion[]
+  
+  @@map("usuario")
+}
+
+model Empresa {
+  empresa_id    Int     @id @default(autoincrement()) @map("empresa_id")
+  nombre        String  @map("nombre")
+  email         String  @unique @map("email")
+  password      String  @map("contraseña")
+  descripcion   String? @map("descripcion")
+  direccion     String? @map("direccion")
+  contacto      String? @map("contacto")
+  horario       String? @map("horario")
+  publicado     Boolean @default(false) @map("publicado")
+  accesibilidad String? @map("accesibilidad")
+  imagenes      String? @db.Text @map("imagenes") // JSON array de URLs de imágenes
+  
+  // Relación con accesibilidad
+  detallesAccesibilidad Accesibilidad[]
+  // Relación con calificaciones
+  calificaciones Calificacion[]
+  
+  @@map("empresa")
+}
+
+model Accesibilidad {
+  accesibilidad_id Int     @id @default(autoincrement()) @map("accesibilidad_id")
+  empresa_id       Int     @map("empresa_id")
+  
+  // Accesibilidad física
+  pasillos_min_90cm        Boolean @default(false) @map("pasillos_min_90cm")
+  rampa                    Boolean @default(false) @map("rampa")
+  puerta_80cm              Boolean @default(false) @map("puerta_80cm")
+  pisos_antideslizantes    Boolean @default(false) @map("pisos_antideslizantes")
+  bano_accesible           Boolean @default(false) @map("bano_accesible")
+  mesas_sillas_adaptadas   Boolean @default(false) @map("mesas_sillas_adaptadas")
+  ascensor                 Boolean @default(false) @map("ascensor")
+  
+  // Adaptabilidad accesible
+  senalizacion_braille     Boolean @default(false) @map("senalizacion_braille")
+  contraste_colores        Boolean @default(false) @map("contraste_colores")
+  guias_podotactiles       Boolean @default(false) @map("guias_podotactiles")
+  alarmas_emergencia       Boolean @default(false) @map("alarmas_emergencia")
+  sistema_audifonos        Boolean @default(false) @map("sistema_audifonos")
+  
+  // Campos adicionales para detalles específicos
+  bano_adaptado_cantidad   String? @map("bano_adaptado_cantidad")
+  bano_adaptado_detalles   String? @map("bano_adaptado_detalles")
+  atencion_prioritaria_tipo String? @map("atencion_prioritaria_tipo")
+  atencion_prioritaria_horario String? @map("atencion_prioritaria_horario")
+  otros_servicios          String? @map("otros_servicios")
+  
+  // Relación con empresa
+  empresa Empresa @relation(fields: [empresa_id], references: [empresa_id], onDelete: Cascade)
+  
+  @@map("accesibilidad")
+}
+
+model Calificacion {
+  calificacion_id Int      @id @default(autoincrement()) @map("calificacion_id")
+  usuario_id      Int      @map("usuario_id")
+  empresa_id      Int      @map("empresa_id")
+  puntuacion      Float    @map("puntuacion") // Rating value, e.g., 1.0 to 5.0
+  fecha_creacion  DateTime @default(now()) @map("fecha_creacion")
+
+  // Relaciones
+  usuario Usuario @relation(fields: [usuario_id], references: [usuario_id], onDelete: Cascade)
+  empresa Empresa @relation(fields: [empresa_id], references: [empresa_id], onDelete: Cascade)
+
+  // Un usuario solo puede calificar una empresa una vez
+  @@unique([usuario_id, empresa_id])
+  @@map("calificacion")
+}
+
