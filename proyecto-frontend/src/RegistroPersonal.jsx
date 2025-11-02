@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { buildApiUrl } from './config/api';
 import './RegistroPersonal.css';
 import { FaInstagram, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 import { MdMailOutline } from 'react-icons/md';
@@ -34,7 +35,7 @@ export default function RegistroPersonal({ onBack, onGoInicio, onGoInicioUsuario
 
     try {
       // Enviar datos al backend
-      const response = await fetch('http://localhost:3000/api/users/register', {
+  const response = await fetch(buildApiUrl('api/users/register'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -18,11 +18,14 @@ export default function Perfil({ onEditPerfil }) {
 
   const cargarDatosEmpresa = async () => {
     try {
-      const response = await fetch(buildApiUrl(`empresa/${user.id}`));
+      // Nota: el backend expone GET /api/empresas/:id y devuelve { empresa: {...} }
+      const response = await fetch(buildApiUrl(`empresas/${user.id}`));
       const data = await response.json();
-      
-      if (data.success) {
+
+      if (response.ok && data.empresa) {
         setEmpresa(data.empresa);
+      } else {
+        console.error('Error al obtener empresa:', data);
       }
     } catch (error) {
       console.error("Error al cargar datos:", error);

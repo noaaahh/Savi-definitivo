@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { buildApiUrl } from './config/api';
 import './RegistroEmpresa.css';
 import { FaInstagram, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 import { MdMailOutline } from 'react-icons/md';
@@ -86,7 +87,7 @@ export default function RegistroEmpresa({ onBack }) {
       console.log('Datos completos a enviar:', datosEmpresa);
 
       // Llamada real al backend
-      const response = await fetch('http://localhost:3000/api/empresas/register', {
+  const response = await fetch(buildApiUrl('api/empresas/register'), {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json' 

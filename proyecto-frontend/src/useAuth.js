@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { buildApiUrl } from './config/api';
 
 // useAuth
 // Hook ligero que expone el usuario actual y el estado de autenticación.
@@ -35,7 +36,7 @@ export function useAuth() {
 // automático de token/usuario; eso se debería gestionar donde se necesite.
 export async function registerUser(data) {
   try {
-    const res = await fetch('http://localhost:3000/api/users/register', {
+  const res = await fetch(buildApiUrl('api/users/register'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -48,7 +49,7 @@ export async function registerUser(data) {
 
 export async function registerCompany(data) {
   try {
-    const res = await fetch('http://localhost:3000/api/users/register-company', {
+  const res = await fetch(buildApiUrl('api/users/register-company'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -63,7 +64,7 @@ export async function registerCompany(data) {
 // Función que autentica al usuario con email y contraseña
 export async function login(email, password) {
   try {
-    const res = await fetch('http://localhost:3000/api/auth/login', {
+  const res = await fetch(buildApiUrl('api/auth/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })

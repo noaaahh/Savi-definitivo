@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { buildApiUrl } from './config/api';
 import "./InicioUsuario.css";
 import { FaInstagram, FaLinkedin, FaWhatsapp, FaSearch } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
@@ -73,10 +74,10 @@ const InicioUsuario = ({ onBack, onGoInicio }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch('http://localhost:3000/api/empresas');
+      const response = await fetch(buildApiUrl('api/empresas'));
       const data = await response.json();
-      console.log("Respuesta de la API:", data); // <-- Agregado para depuración
-      if (data.success) {
+      console.log("Respuesta de la API:", data);
+      if (response.ok && data.empresas) {
         setEmpresasData(data.empresas || []);
       } else {
         setError('Error al cargar las empresas');

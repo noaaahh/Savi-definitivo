@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { buildApiUrl } from '../config/api';
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -10,7 +11,7 @@ export default function Profile() {
       setError("No autenticado");
       return;
     }
-    fetch("http://localhost:3000/api/users/profile", {
+  fetch(buildApiUrl('api/users/profile'), {
       headers: {
         "Authorization": `Bearer ${token}`
       }

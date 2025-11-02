@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { buildApiUrl } from '../config/api';
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -11,7 +12,7 @@ export default function Login() {
     e.preventDefault();
     setError("");
     try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
+  const res = await fetch(buildApiUrl('api/auth/login'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })

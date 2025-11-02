@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { buildApiUrl } from '../config/api';
 
 export default function Contact() {
   const [name, setName] = useState("");
@@ -12,7 +13,7 @@ export default function Contact() {
     setSuccess("");
     setError("");
     try {
-      const res = await fetch("http://localhost:3000/api/contact", {
+  const res = await fetch(buildApiUrl('api/contact'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message })
