@@ -5,7 +5,7 @@ import { FaInstagram, FaLinkedin, FaWhatsapp, FaSearch } from "react-icons/fa";
 import { MdMailOutline } from "react-icons/md";
 import { BsFilterLeft } from "react-icons/bs";
 import LocalAmpliado from "./LocalAmpliado";
-import TopActionHeader from './layout/TopActionHeader';
+import TopActionHeader from './layout/Header';
 
 const InicioUsuario = ({ onBack, onGoInicio }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
